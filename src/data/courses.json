@@ -1,0 +1,224 @@
+[
+  {
+    "id": "vip-course",
+    "category": "AI",
+    "status": "waitlist",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/vip-course.webp",
+      "width": 720,
+      "height": 394,
+      "alt": {
+        "mn": "Хиймэл оюун, өгөгдөл, хөгжүүлэлтийг холбосон дүрслэл",
+        "en": "Illustration connecting AI, data and development"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "VIP цогц сургалт",
+      "en": "VIP Course"
+    },
+    "description": {
+      "mn": "Суурь ойлголтоос AI төсөл хүртэлх цогц хөтөлбөр.",
+      "en": "A complete path from fundamentals to an AI project."
+    }
+  },
+  {
+    "id": "data-analysis",
+    "category": "Data",
+    "status": "open",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/data-analysis.webp",
+      "width": 720,
+      "height": 394,
+      "alt": {
+        "mn": "Баганан график, өгөгдлийн самбарын дүрслэл",
+        "en": "Illustration of an analytics dashboard and charts"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Өгөгдлийн шинжилгээ ба Power BI",
+      "en": "Data Analysis & Power BI"
+    },
+    "description": {
+      "mn": "SQL, Python болон Power BI ашиглан өгөгдөл шинжилж, тайлан бүтээх.",
+      "en": "Analyse data and build reports with SQL, Python and Power BI."
+    }
+  },
+  {
+    "id": "computer-skills",
+    "category": "Digital",
+    "status": "waitlist",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/computer-skills.webp",
+      "width": 715,
+      "height": 394,
+      "alt": {
+        "mn": "Компьютер, гар, хулгана болон файлуудын дүрслэл",
+        "en": "Illustration of a computer, keyboard, mouse and files"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Компьютерын хэрэглээ",
+      "en": "Computer Skills"
+    },
+    "description": {
+      "mn": "Компьютерын үндсэн хэрэглээ, файл болон өдөр тутмын дижитал хэрэгслүүд.",
+      "en": "Computer basics, files and everyday digital tools."
+    }
+  },
+  {
+    "id": "python-programming",
+    "category": "Code",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/python-programming.jpg",
+      "srcSet": "/assets/courses/python-programming-small.jpg 768w, /assets/courses/python-programming.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Python программчлалын код, логикийн дүрслэл",
+        "en": "Concept illustration of Python coding and logic"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Python программчлал",
+      "en": "Python Programming"
+    },
+    "description": {
+      "mn": "Python хэлний суурь, өгөгдлийн бүтэц, автоматжуулалт.",
+      "en": "Python fundamentals, data structures and automation."
+    }
+  },
+  {
+    "id": "web-development",
+    "category": "Code",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/web-development.jpg",
+      "srcSet": "/assets/courses/web-development-small.jpg 768w, /assets/courses/web-development.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Компьютер, таблет, утсанд зохицох вэбсайтын дүрслэл",
+        "en": "Illustration of responsive web development across devices"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Вэб хөгжүүлэлт",
+      "en": "Web Development"
+    },
+    "description": {
+      "mn": "HTML, CSS, JavaScript ашиглан вэбсайт бүтээх суурь.",
+      "en": "Build websites with HTML, CSS and JavaScript."
+    }
+  },
+  {
+    "id": "sql-databases",
+    "category": "Data",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/sql-databases.jpg",
+      "srcSet": "/assets/courses/sql-databases-small.jpg 768w, /assets/courses/sql-databases.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Холбогдсон өгөгдлийн сан, хүснэгтүүдийн дүрслэл",
+        "en": "Illustration of linked databases and structured data"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "SQL ба өгөгдлийн сан",
+      "en": "SQL & Databases"
+    },
+    "description": {
+      "mn": "Өгөгдлийн сангийн зохион байгуулалт, хайлт болон шинжилгээ.",
+      "en": "Database design, queries and analysis."
+    }
+  },
+  {
+    "id": "ai-rag-systems",
+    "category": "AI",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/ai-rag-systems.jpg",
+      "srcSet": "/assets/courses/ai-rag-systems-small.jpg 768w, /assets/courses/ai-rag-systems.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Баримт бичиг, хайлт, AI туслахын холбоосын дүрслэл",
+        "en": "Illustration of documents connected to a retrieval-based AI assistant"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "AI ба RAG систем",
+      "en": "AI & RAG Systems"
+    },
+    "description": {
+      "mn": "Эх сурвалжид тулгуурласан AI туслах бүтээх ойлголтууд.",
+      "en": "Explore grounded AI assistants and retrieval."
+    }
+  },
+  {
+    "id": "machine-learning",
+    "category": "AI",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/machine-learning.jpg",
+      "srcSet": "/assets/courses/machine-learning-small.jpg 768w, /assets/courses/machine-learning.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Өгөгдөл боловсруулж буй мэдрэлийн сүлжээний дүрслэл",
+        "en": "Illustration of a neural network processing data"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Машин сургалт",
+      "en": "Machine Learning"
+    },
+    "description": {
+      "mn": "Өгөгдөл бэлтгэх, загвар сургах, үр дүнг үнэлэх суурь.",
+      "en": "Prepare data, train models and evaluate results."
+    }
+  },
+  {
+    "id": "cybersecurity",
+    "category": "Digital",
+    "status": "planned",
+    "price": null,
+    "image": {
+      "src": "/assets/courses/cybersecurity.jpg",
+      "srcSet": "/assets/courses/cybersecurity-small.jpg 768w, /assets/courses/cybersecurity.jpg 1536w",
+      "width": 1536,
+      "height": 1024,
+      "alt": {
+        "mn": "Бамбай, цоож, цахим хамгаалалтын дүрслэл",
+        "en": "Illustration of a shield and lock for digital security"
+      },
+      "generated": true
+    },
+    "title": {
+      "mn": "Кибер аюулгүй байдал",
+      "en": "Cybersecurity"
+    },
+    "description": {
+      "mn": "Дижитал мэдээлэл, бүртгэл болон системээ хамгаалах суурь.",
+      "en": "Foundations for protecting accounts, information and systems."
+    }
+  }
+]
