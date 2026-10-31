@@ -1,0 +1,80 @@
+// Magic Code AI өгөгдлийн сангийн схем (PostgreSQL).
+// Монгол/англи текст (LocalizedText), зураг (NewsImage) нь Json баганад docs/API.md-ийн хэлбэрээрээ хадгалагдана.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id          String       @id // "data-analysis" гэх мэт, URL-д ашиглагдана
+  category    String // Code | Data | AI | Digital
+  status      String // open | waitlist | planned
+  price       Int? // төгрөгөөр, батлагдаагүй бол null
+  title       Json
+  description Json
+  image       Json?
+  sortOrder   Int          @default(0) @map("sort_order")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  enrollments Enrollment[]
+
+  @@index([category])
+  @@map("courses")
+}
+
+model News {
+  id          String    @id
+  number      String // картан дээрх "01"
+  category    Json
+  title       Json
+  summary     Json
+  body        Json?
+  details     Json?
+  coverImage  Json?     @map("cover_image")
+  gallery     Json?
+  publishedAt DateTime? @map("published_at")
+  isSample    Boolean   @default(false) @map("is_sample")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("news")
+}
+
+model Enrollment {
+  id              String    @id // enr_...
+  courseId        String    @map("course_id")
+  course          Course    @relation(fields: [courseId], references: [id])
+  name            String
+  email           String
+  emailNormalized String    @map("email_normalized") // давхардал шалгахад: жижиг үсгээр
+  phone           String
+  status          String // pending_payment | waitlisted | paid | cancelled
+  createdAt       DateTime  @default(now()) @map("created_at")
+  payments        Payment[]
+
+  @@unique([courseId, emailNormalized])
+  @@index([createdAt])
+  @@map("enrollments")
+}
+
+model Payment {
+  id           String     @id // pay_...
+  enrollmentId String     @map("enrollment_id")
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  method       String // qpay | bank
+  status       String // pending | paid | failed | expired
+  amount       Int?
+  currency     String     @default("MNT")
+  instructions Json?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  paidAt       DateTime?  @map("paid_at")
+
+  @@index([enrollmentId])
+  @@map("payments")
+}

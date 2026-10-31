@@ -1,33 +1,41 @@
-// Түр өгөгдлийн давхарга. Одоогоор frontend-ийн mock-оос хуулсан JSON (scripts/sync-from-frontend.mjs).
-// PostgreSQL + Prisma холбох үед зөвхөн энэ файлын функцуудыг солино; route-ууд өөрчлөгдөхгүй.
-import { readFileSync } from 'node:fs';
-
-const load = (name) => JSON.parse(readFileSync(new URL(`./data/${name}.json`, import.meta.url), 'utf8'));
-const courses = load('courses');
-const news = load('news');
-const clone = (value) => structuredClone(value);
+// Өгөгдлийн давхарга. Route-ууд зөвхөн энэ файлын функцуудыг ашиглана.
+//  - DATABASE_URL тохируулсан бол: PostgreSQL (Prisma) — src/store/prisma.js
+//  - Үгүй бол: санах ой — src/store/memory.js (тест, хурдан туршилтад)
+import { randomBytes } from 'node:crypto';
+import { createMemoryStore } from './store/memory.js';
 
 export const CATEGORIES = ['Code', 'Data', 'AI', 'Digital'];
+export const newId = (prefix) => `${prefix}_${randomBytes(6).toString('hex')}`;
 
-export function listCourses({ category } = {}) {
-  return clone(category ? courses.filter((c) => c.category === category) : courses);
+let store;
+
+/** Тестэд эсвэл эхлүүлэхэд store-ийг солино. */
+export function useStore(next) {
+  store = next;
+  return store;
 }
 
-export function findCourse(id) {
-  const course = courses.find((c) => c.id === id);
-  return course ? clone(course) : null;
+export async function initStore(env = process.env) {
+  if (store) return store;
+  if (env.DATABASE_URL) {
+    const { createPrismaStore } = await import('./store/prisma.js');
+    return useStore(createPrismaStore());
+  }
+  return useStore(createMemoryStore());
 }
 
-// Frontend-ийн src/api/news.js-тэй ижил: жагсаалтад body, details, gallery орохгүй.
-const summary = ({ id, number, category, title, summary: text, publishedAt, isSample, coverImage }) => ({
-  id, number, category, title, summary: text, publishedAt, isSample, coverImage,
-});
-
-export function listNews({ limit } = {}) {
-  return clone(news.slice(0, limit ?? news.length).map(summary));
+export function getStore() {
+  if (!store) throw new Error('Store is not initialised: call initStore() first');
+  return store;
 }
 
-export function findNews(id) {
-  const item = news.find((n) => n.id === id);
-  return item ? clone(item) : null;
-}
+const call = (name) => (...args) => getStore()[name](...args);
+
+export const listCourses = call('listCourses');
+export const findCourse = call('findCourse');
+export const listNews = call('listNews');
+export const findNews = call('findNews');
+export const insertEnrollment = call('insertEnrollment');
+export const findEnrollment = call('findEnrollment');
+export const insertPayment = call('insertPayment');
+export const findPayment = call('findPayment');

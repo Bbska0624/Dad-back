@@ -2,6 +2,10 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createApp } from '../src/app.js';
+import { useStore } from '../src/store.js';
+import { createMemoryStore } from '../src/store/memory.js';
+
+useStore(createMemoryStore());
 
 let server;
 let base;

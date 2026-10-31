@@ -1,18 +1,29 @@
 {
   "name": "mci-backend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Magic Code AI backend (docs/API.md гэрээний дагуу)",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "test": "node --test",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.js",
+    "db:studio": "prisma studio",
     "sync:frontend": "node scripts/sync-from-frontend.mjs ../Dad"
   },
   "dependencies": {
+    "@prisma/client": "~6.19.3",
     "cors": "^2.8.5",
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "prisma": "~6.19.3"
   }
 }
