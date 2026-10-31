@@ -92,13 +92,30 @@ Frontend-ийн файлуудыг зөвхөн уншина, өөрчлөхгү
 
 ## Vercel дээр deploy хийх (өөрөө)
 
-1. Энэ folder-ийг GitHub repo руу push хийнэ.
-2. Vercel → New Project → repo-гоо сонгоно. Framework Preset: **Other**. Build command хоосон байж болно.
-3. Environment Variables: `DATABASE_URL` (онлайн Postgres, жишээ нь Neon), `CORS_ORIGINS=https://www.mci.mn,https://mci.mn`, `GEMINI_API_KEY=...`, `BANK_NAME`, `BANK_ACCOUNT_NUMBER`, `BANK_ACCOUNT_NAME`
-   Онлайн DB дээр нэг удаа: `DATABASE_URL=<онлайн> npm run db:deploy` болон `npm run db:seed`.
-4. Deploy хийсний дараа `https://<таны-домэйн>/api/health` нь `{"status":"ok"}` буцаах ёстой.
+Онлайн DB: **Supabase** (бүс: Sydney, `ap-southeast-2`). Vercel функц мөн Сиднейд (`vercel.json` → `"regions": ["syd1"]`).
 
-`vercel.json` бүх хүсэлтийг `api/index.js` (Express app) руу чиглүүлнэ.
+**1. Supabase DB-д хүснэгт үүсгэж, өгөгдөл оруулах** (таны компьютерээс, cmd дээр, нэг удаа):
+
+```
+set "DATABASE_URL=<Supabase transaction pooler, 6543, ?pgbouncer=true>"
+set "DIRECT_URL=<Supabase session pooler, 5432>"
+npm run db:deploy
+npm run db:seed
+```
+
+Terminal-д `set` хийсэн утга нь `.env`-ээс давуу. Terminal-ыг хаахад алга болж, дахин локал DB руу буцна.
+
+**2. Vercel:**
+1. Vercel → Add New → Project → GitHub-ийн `Dad-back` repo → Import.
+2. Framework Preset: **Other**. Build/Output тохиргоог хоосон үлдээнэ.
+3. Environment Variables:
+   - `DATABASE_URL` = Supabase transaction pooler (6543, `?pgbouncer=true`)
+   - `DIRECT_URL` = Supabase session pooler (5432)
+   - `CORS_ORIGINS` = `https://www.mci.mn,https://mci.mn`
+   - (дараа нь) `GEMINI_API_KEY`, `BANK_NAME`, `BANK_ACCOUNT_NUMBER`, `BANK_ACCOUNT_NAME`
+4. Deploy.
+
+**3. Шалгах:** `https://<домэйн>.vercel.app/api/health` → `{"status":"ok"}`, `/api/courses` → 9 курс.
 
 ## Frontend-ийг холбох (дараа нь, таны зөвшөөрлөөр)
 

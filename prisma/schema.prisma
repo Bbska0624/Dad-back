@@ -7,7 +7,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL") // Vercel: Supabase pooler (6543, ?pgbouncer=true)
+  directUrl = env("DIRECT_URL") // migration-д: шууд/session холболт (5432)
 }
 
 model Course {
