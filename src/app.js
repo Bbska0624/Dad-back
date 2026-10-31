@@ -15,6 +15,16 @@ const DEFAULT_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http
 const allowedOrigins = (process.env.CORS_ORIGINS || DEFAULT_ORIGINS.join(','))
   .split(',').map((o) => o.trim()).filter(Boolean);
 
+// CORS_ORIGIN_REGEX="^https://mci-web-[a-z0-9-]+\.vercel\.app$" — Vercel Preview хаягуудыг зөвшөөрөхөд.
+function buildOriginCheck(env) {
+  const pattern = env.CORS_ORIGIN_REGEX?.trim();
+  const regex = pattern ? new RegExp(pattern) : null;
+  return (origin, callback) => {
+    if (!origin) return callback(null, false);
+    callback(null, allowedOrigins.includes(origin) || Boolean(regex?.test(origin)));
+  };
+}
+
 /**
  * @param {object} [options]
  * @param {Function} [options.generateReply]  Чатын хариу үүсгэгч (тестэд солино)
@@ -26,7 +36,7 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', 1); // Vercel-ийн proxy-ийн ард жинхэнэ IP-г авна
-  app.use(cors({ origin: allowedOrigins }));
+  app.use(cors({ origin: buildOriginCheck(env) }));
   app.use(express.json({ limit: '100kb' }));
 
   const limit = chatLimit ?? { windowMs: 60_000, max: Number(process.env.CHAT_RATE_LIMIT) || 10 };

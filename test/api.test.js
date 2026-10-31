@@ -104,3 +104,17 @@ test('CORS: зөвшөөрсөн origin-д header буцаана', async () => {
   const other = await get('/courses', { Origin: 'https://evil.example' });
   assert.equal(other.res.headers.get('access-control-allow-origin'), null);
 });
+
+test('CORS: CORS_ORIGIN_REGEX-д таарсан Preview хаягийг зөвшөөрнө', async () => {
+  const app = createApp({ env: { ...process.env, CORS_ORIGIN_REGEX: '^https://mci-web-[a-z0-9-]+\\.vercel\\.app$' } });
+  const server = app.listen(0);
+  try {
+    const base = `http://127.0.0.1:${server.address().port}/api/health`;
+    const ok = await fetch(base, { headers: { Origin: 'https://mci-web-abc123-team.vercel.app' } });
+    assert.equal(ok.headers.get('access-control-allow-origin'), 'https://mci-web-abc123-team.vercel.app');
+    const bad = await fetch(base, { headers: { Origin: 'https://mci-web.vercel.app.evil.com' } });
+    assert.equal(bad.headers.get('access-control-allow-origin'), null);
+  } finally {
+    server.close();
+  }
+});
