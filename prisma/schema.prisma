@@ -23,14 +23,24 @@ model Course {
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
   enrollments Enrollment[]
+  publication String @default("published")
+  deletedAt DateTime? @map("deleted_at")
+  featured Boolean @default(false)
+  duration Json?
+  level Json?
+  managed Boolean @default(false)
+  homePresentation Json? @map("home_presentation")
 
   @@index([category])
   @@map("courses")
 }
 
 model News {
+  publication String @default("published")
+  deletedAt DateTime? @map("deleted_at")
+  managed Boolean @default(false)
   id          String    @id
-  number      String // картан дээрх "01"
+  number      String @default("01") // картан дээрх "01"
   category    Json
   title       Json
   summary     Json
@@ -48,6 +58,9 @@ model News {
 }
 
 model Enrollment {
+  userId String? @map("user_id")
+  adminStatus String @default("new") @map("admin_status")
+  deletedAt DateTime? @map("deleted_at")
   id              String    @id // enr_...
   courseId        String    @map("course_id")
   course          Course    @relation(fields: [courseId], references: [id])
@@ -62,6 +75,40 @@ model Enrollment {
   @@unique([courseId, emailNormalized])
   @@index([createdAt])
   @@map("enrollments")
+}
+
+model Profile {
+  id String @id
+  email String @unique
+  name String
+  phone String @default("")
+  goal String @default("")
+  role String @default("user")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("profiles")
+}
+
+model Order {
+  id String @id
+  userId String @map("user_id")
+  items Json
+  status String @default("new")
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  @@index([userId])
+  @@map("orders")
+}
+
+model Activity {
+  id String @id
+  actorId String @map("actor_id")
+  action String
+  type String
+  title Json
+  at DateTime @default(now())
+  @@index([at])
+  @@map("activity")
 }
 
 model Payment {

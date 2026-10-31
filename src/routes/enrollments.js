@@ -2,14 +2,18 @@
 import { Router } from 'express';
 import { HttpError, notFound, validationError } from '../errors.js';
 import { findCourse, insertEnrollment, newId } from '../store.js';
+import { authMiddleware } from '../services/supabase.js';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE = /^[+0-9 ()-]{8,20}$/;
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
 
-export function createEnrollmentsRouter({ limit }) {
+export function createEnrollmentsRouter({ limit, env, verifyUser }) {
   const router = Router();
-  router.post('/', limit, async (req, res) => {
+  router.post('/', limit, async (req, res, next) => {
+    if (req.headers.authorization) return authMiddleware({ env, verifyUser })(req, res, next);
+    next();
+  }, async (req, res) => {
     const body = req.body ?? {};
     const input = { courseId: str(body.courseId), name: str(body.name), email: str(body.email), phone: str(body.phone) };
 
@@ -28,8 +32,9 @@ export function createEnrollmentsRouter({ limit }) {
     const record = await insertEnrollment({
       id: newId('enr'),
       courseId: course.id,
+      userId: req.user?.id ?? null,
       name: input.name,
-      email: input.email,
+      email: req.user?.email ?? input.email,
       phone: input.phone,
       status: course.status === 'open' ? 'pending_payment' : 'waitlisted',
       createdAt: new Date().toISOString(),

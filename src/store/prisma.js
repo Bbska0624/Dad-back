@@ -3,6 +3,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { HttpError } from '../errors.js';
 import { newsSummary } from './memory.js';
+import { visibleContent } from '../services/content.js';
 
 const toCourse = (c) => ({
   id: c.id,
@@ -12,6 +13,7 @@ const toCourse = (c) => ({
   image: c.image,
   title: c.title,
   description: c.description,
+  ...(c.managed || c.featured ? { publication: c.publication, featured: c.featured, duration: c.duration, level: c.level, managed: c.managed, homePresentation: c.homePresentation } : {}),
 });
 
 const toNews = (n) => {
@@ -44,8 +46,8 @@ const toPayment = (p) => ({
 // Json? баганад null бичихэд Prisma тусгай утга шаарддаг.
 const json = (value) => (value == null ? Prisma.DbNull : value);
 
-export function createPrismaStore({ url } = {}) {
-  const prisma = new PrismaClient(url ? { datasources: { db: { url } } } : undefined);
+export function createPrismaStore({ url, client } = {}) {
+  const prisma = client || new PrismaClient(url ? { datasources: { db: { url } } } : undefined);
   const ordered = { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] };
 
   return {
@@ -53,20 +55,20 @@ export function createPrismaStore({ url } = {}) {
     prisma,
 
     async listCourses({ category } = {}) {
-      const rows = await prisma.course.findMany({ where: category ? { category } : undefined, ...ordered });
+      const rows = await prisma.course.findMany({ where: { ...visibleContent, ...(category ? { category } : {}) }, ...ordered });
       return rows.map(toCourse);
     },
     async findCourse(id) {
-      const row = await prisma.course.findUnique({ where: { id } });
+      const row = await prisma.course.findFirst({ where: { id, ...visibleContent } });
       return row ? toCourse(row) : null;
     },
 
     async listNews({ limit } = {}) {
-      const rows = await prisma.news.findMany({ ...ordered, take: limit });
+      const rows = await prisma.news.findMany({ where: visibleContent, ...ordered, take: limit });
       return rows.map((n) => newsSummary(toNews(n)));
     },
     async findNews(id) {
-      const row = await prisma.news.findUnique({ where: { id } });
+      const row = await prisma.news.findFirst({ where: { id, ...visibleContent } });
       return row ? toNews(row) : null;
     },
 
@@ -76,6 +78,7 @@ export function createPrismaStore({ url } = {}) {
           data: {
             id: record.id,
             courseId: record.courseId,
+            userId: record.userId ?? null,
             name: record.name,
             email: record.email,
             emailNormalized: record.email.toLowerCase(),
@@ -134,7 +137,7 @@ export async function seedContent(prisma, { courses, news }) {
   for (const [i, c] of courses.entries()) {
     const data = {
       category: c.category, status: c.status, price: c.price ?? null, title: c.title, description: c.description,
-      image: json(c.image), sortOrder: i,
+      image: json(c.image), sortOrder: i, featured: Boolean(c.featured), homePresentation: json(c.homePresentation),
     };
     await prisma.course.upsert({ where: { id: c.id }, create: { id: c.id, ...data }, update: data });
   }

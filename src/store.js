@@ -3,6 +3,7 @@
 //  - Үгүй бол: санах ой — src/store/memory.js (тест, хурдан туршилтад)
 import { randomBytes } from 'node:crypto';
 import { createMemoryStore } from './store/memory.js';
+import { HttpError } from './errors.js';
 
 export const CATEGORIES = ['Code', 'Data', 'AI', 'Digital'];
 export const newId = (prefix) => `${prefix}_${randomBytes(6).toString('hex')}`;
@@ -18,9 +19,11 @@ export function useStore(next) {
 export async function initStore(env = process.env) {
   if (store) return store;
   if (env.DATABASE_URL) {
+    if (env.DATABASE_URL.includes('YOUR_DATABASE_PASSWORD')) throw new HttpError(503, 'configuration_error', 'Database credentials are not configured');
     const { createPrismaStore } = await import('./store/prisma.js');
-    return useStore(createPrismaStore());
+    return useStore(createPrismaStore({ url: env.DATABASE_URL }));
   }
+  if (env.NODE_ENV === 'production') throw new HttpError(503, 'configuration_error', 'DATABASE_URL is required in production');
   return useStore(createMemoryStore());
 }
 

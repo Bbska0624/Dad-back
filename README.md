@@ -3,7 +3,7 @@
 Frontend (`Dad`, mci.mn) -ийн `docs/API.md` гэрээг яг дагасан backend. **Бэлэн:** сургалт, мэдээний API (1-р шат), чатбот `POST /api/chat` (3-р шат), бүртгэл + төлбөр (5-р шат).
 
 Өгөгдөл PostgreSQL-д (Prisma) хадгалагдана (4-р шат). `DATABASE_URL` тохируулаагүй бол санах ойд ажиллана (тест, туршилтад).
-Өгөгдлийн сан, QPay одоогоор холбогдоогүй: өгөгдөл нь frontend-ийн mock-оос хуулсан `src/data/*.json`.
+Supabase PostgreSQL, Auth, Storage холбогдсон. Админы API болон тохиргооны дэлгэрэнгүй: [SUPABASE.md](SUPABASE.md). QPay болон төлбөрийн автомат баталгаажуулалт хараахан холбогдоогүй. JSON файлууд нь эхний өгөгдлийн эх үүсвэр; database тохируулсан үед хүсэлтүүдийг database-аас уншина.
 
 ## Endpoint-ууд
 
@@ -117,10 +117,10 @@ Terminal-д `set` хийсэн утга нь `.env`-ээс давуу. Terminal-
 
 **3. Шалгах:** `https://<домэйн>.vercel.app/api/health` → `{"status":"ok"}`, `/api/courses` → 9 курс.
 
-## Frontend-ийг холбох (дараа нь, таны зөвшөөрлөөр)
+## Frontend холболт
 
 Frontend-ийн `.env` дотор: `VITE_USE_MOCK=false`, `VITE_API_URL=https://<backend-домэйн>/api`.
-Холбохоос өмнө backend нь онлайн DB-тэй Vercel дээр ажиллаж байх ёстой (2-р шат).
+Локал орчинд frontend-ийн Vite proxy /api хүсэлтийг localhost:4000 руу дамжуулна. Production-д backend-ийн онлайн хаяг болон CORS_ORIGINS-ийг тохируулна. Supabase Auth-ийн public тохиргоо frontend-ийн .env.local файлд байна; нууц түлхүүрүүд зөвхөн backend-д байна.
 
 ## Хавтасны бүтэц
 
