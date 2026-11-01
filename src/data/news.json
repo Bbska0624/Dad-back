@@ -32,19 +32,40 @@
       }
     },
     "coverImage": {
-      "src": "/assets/news/khush-tugul/saplings.jpg",
-      "width": 4032,
-      "height": 3024,
+      "src": "/assets/news/khush-tugul/group-photo.jpg",
+      "srcSet": "/assets/news/khush-tugul/group-photo-small.jpg 768w, /assets/news/khush-tugul/group-photo.jpg 1284w",
+      "width": 1284,
+      "height": 963,
+      "position": "center 70%",
       "alt": {
-        "mn": "Мод тарихаар бэлтгэсэн хоёр суулгац",
-        "en": "Two saplings prepared for planting"
-      },
-      "caption": {
-        "mn": "Мод тарихаар бэлтгэсэн суулгацууд.",
-        "en": "Saplings prepared for planting."
+        "mn": "Мод тарих ажилд оролцсон хамт олны хамтын зураг",
+        "en": "Group photo of the tree-planting participants"
       }
     },
     "gallery": [
+      {
+        "src": "/assets/news/khush-tugul/event-talk.jpg",
+        "srcSet": "/assets/news/khush-tugul/event-talk-small.jpg 768w, /assets/news/khush-tugul/event-talk.jpg 1500w",
+        "width": 1500,
+        "height": 2000,
+        "alt": {
+          "mn": "Хусхан төгөлд мод тарих арга хэмжээний үеэр үг хэлж буй агшин",
+          "en": "A speech during the tree-planting event at Hushkhan Tugul"
+        }
+      },
+      {
+        "src": "/assets/news/khush-tugul/saplings.jpg",
+        "width": 4032,
+        "height": 3024,
+        "alt": {
+          "mn": "Мод тарихаар бэлтгэсэн хоёр суулгац",
+          "en": "Two saplings prepared for planting"
+        },
+        "caption": {
+          "mn": "Мод тарихаар бэлтгэсэн суулгацууд.",
+          "en": "Saplings prepared for planting."
+        }
+      },
       {
         "src": "/assets/news/khush-tugul/planting-team.jpg",
         "width": 3072,
@@ -298,200 +319,5 @@
         }
       }
     ]
-  },
-  {
-    "id": "4",
-    "number": "04",
-    "category": {
-      "mn": "Сургалт · Жишээ",
-      "en": "Learning · Sample"
-    },
-    "title": {
-      "mn": "Дижитал ур чадварын сургалт",
-      "en": "Digital skills workshop"
-    },
-    "summary": {
-      "mn": "Сургалтын сэдэв, хамрагдсан оролцогчид, бүтээлүүдийг энд танилцуулна.",
-      "en": "Present workshop topics, participants and their work here."
-    },
-    "publishedAt": null,
-    "details": {
-      "date": null,
-      "location": null,
-      "partners": null
-    },
-    "body": null,
-    "isSample": true,
-    "coverImage": {
-      "src": "/assets/news/digital-skills-workshop.jpg",
-      "srcSet": "/assets/news/digital-skills-workshop-small.jpg 768w, /assets/news/digital-skills-workshop.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
-      "alt": {
-        "mn": "Дижитал ур чадварын сургалтын ажлын ширээний дүрслэл",
-        "en": "Concept illustration of a digital skills workshop desk"
-      },
-      "generated": true,
-      "caption": {
-        "mn": "AI-ээр үүсгэсэн дүрслэл.",
-        "en": "AI-generated illustration."
-      }
-    }
-  },
-  {
-    "id": "5",
-    "number": "05",
-    "category": {
-      "mn": "Төсөл · Жишээ",
-      "en": "Projects · Sample"
-    },
-    "title": {
-      "mn": "Суралцагчдын бүтээлийн өдөр",
-      "en": "Student project showcase"
-    },
-    "summary": {
-      "mn": "Суралцагчдын төсөл, шийдэл болон туршлагыг энд хуваалцана.",
-      "en": "Share student projects, solutions and experiences here."
-    },
-    "publishedAt": null,
-    "details": {
-      "date": null,
-      "location": null,
-      "partners": null
-    },
-    "body": null,
-    "isSample": true,
-    "coverImage": {
-      "src": "/assets/news/student-projects.jpg",
-      "srcSet": "/assets/news/student-projects-small.jpg 768w, /assets/news/student-projects.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
-      "alt": {
-        "mn": "Суралцагчдын вэбсайт, тайлан, AI төслийн үзэсгэлэнгийн дүрслэл",
-        "en": "Concept illustration of a student project showcase"
-      },
-      "generated": true,
-      "caption": {
-        "mn": "AI-ээр үүсгэсэн дүрслэл.",
-        "en": "AI-generated illustration."
-      }
-    }
-  },
-  {
-    "id": "6",
-    "number": "06",
-    "category": {
-      "mn": "Сайн дурын ажил · Жишээ",
-      "en": "Volunteering · Sample"
-    },
-    "title": {
-      "mn": "Мэдлэгээ хуваалцах сайн дурын өдөр",
-      "en": "Volunteer knowledge sharing"
-    },
-    "summary": {
-      "mn": "Сайн дурын оролцоо, хамтын ажлын түүхийг энд нийтэлнэ.",
-      "en": "Publish volunteer stories and collaborative activities here."
-    },
-    "publishedAt": null,
-    "details": {
-      "date": null,
-      "location": null,
-      "partners": null
-    },
-    "body": null,
-    "isSample": true,
-    "coverImage": {
-      "src": "/assets/news/knowledge-sharing.jpg",
-      "srcSet": "/assets/news/knowledge-sharing-small.jpg 768w, /assets/news/knowledge-sharing.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
-      "alt": {
-        "mn": "Хамтын ширээ, ном, компьютероор мэдлэг хуваалцах дүрслэл",
-        "en": "Concept illustration of collaborative knowledge sharing"
-      },
-      "generated": true,
-      "caption": {
-        "mn": "AI-ээр үүсгэсэн дүрслэл.",
-        "en": "AI-generated illustration."
-      }
-    }
-  },
-  {
-    "id": "7",
-    "number": "07",
-    "category": {
-      "mn": "Хамтын ажиллагаа · Жишээ",
-      "en": "Partnerships · Sample"
-    },
-    "title": {
-      "mn": "Боловсролын төлөөх хамтын ажиллагаа",
-      "en": "Partnerships for education"
-    },
-    "summary": {
-      "mn": "Хамтарсан санаачилгын зорилго, явц болон үр дүнг энд танилцуулна.",
-      "en": "Introduce joint initiatives, their progress and outcomes here."
-    },
-    "publishedAt": null,
-    "details": {
-      "date": null,
-      "location": null,
-      "partners": null
-    },
-    "body": null,
-    "isSample": true,
-    "coverImage": {
-      "src": "/assets/news/education-partnership.jpg",
-      "srcSet": "/assets/news/education-partnership-small.jpg 768w, /assets/news/education-partnership.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
-      "alt": {
-        "mn": "Боловсролын хамтын ажиллагааг илэрхийлсэн гүүр, номын дүрслэл",
-        "en": "Concept illustration of a partnership for education"
-      },
-      "generated": true,
-      "caption": {
-        "mn": "AI-ээр үүсгэсэн дүрслэл.",
-        "en": "AI-generated illustration."
-      }
-    }
-  },
-  {
-    "id": "8",
-    "number": "08",
-    "category": {
-      "mn": "Уулзалт · Жишээ",
-      "en": "Events · Sample"
-    },
-    "title": {
-      "mn": "Мэргэжил сонголт ба технологийн ирээдүй",
-      "en": "Careers and the future of technology"
-    },
-    "summary": {
-      "mn": "Зөвлөгөө, ярилцлага болон уулзалтын гол санаануудыг энд хуваалцана.",
-      "en": "Share career advice, conversations and event takeaways here."
-    },
-    "publishedAt": null,
-    "details": {
-      "date": null,
-      "location": null,
-      "partners": null
-    },
-    "body": null,
-    "isSample": true,
-    "coverImage": {
-      "src": "/assets/news/careers-technology.jpg",
-      "srcSet": "/assets/news/careers-technology-small.jpg 768w, /assets/news/careers-technology.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
-      "alt": {
-        "mn": "Технологийн мэргэжлийн сонголтуудыг илэрхийлсэн замын дүрслэл",
-        "en": "Concept illustration of technology career pathways"
-      },
-      "generated": true,
-      "caption": {
-        "mn": "AI-ээр үүсгэсэн дүрслэл.",
-        "en": "AI-generated illustration."
-      }
-    }
   }
 ]

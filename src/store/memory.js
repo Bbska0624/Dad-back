@@ -6,9 +6,7 @@ import { HttpError } from '../errors.js';
 const load = (name) => JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), 'utf8'));
 const clone = (value) => structuredClone(value);
 
-export function createMemoryStore() {
-  const courses = load('courses');
-  const news = load('news');
+export function createMemoryStore({ courses = load('courses'), news = load('news') } = {}) {
   const enrollments = new Map();
   const payments = new Map();
 

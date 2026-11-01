@@ -2,7 +2,7 @@
   {
     "id": "vip-course",
     "category": "AI",
-    "status": "waitlist",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/vip-course-slide.svg",
@@ -12,7 +12,6 @@
         "mn": "VIP цогц сургалт",
         "en": "VIP Complete Course"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -37,7 +36,6 @@
         "mn": "Өгөгдлийн шинжилгээ ба Power BI",
         "en": "Data Analysis & Power BI"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -52,7 +50,7 @@
   {
     "id": "computer-skills",
     "category": "Digital",
-    "status": "waitlist",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/computer-skills-slide.svg",
@@ -62,7 +60,6 @@
         "mn": "Компьютерийн хэрэглээ",
         "en": "Computer Skills"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -77,7 +74,7 @@
   {
     "id": "python-programming",
     "category": "Code",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/python-programming-slide.svg",
@@ -87,7 +84,6 @@
         "mn": "Python программчлал",
         "en": "Python Programming"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -102,7 +98,7 @@
   {
     "id": "web-development",
     "category": "Code",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/web-development-slide.svg",
@@ -112,7 +108,6 @@
         "mn": "Вэб хөгжүүлэлт",
         "en": "Web Development"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -127,7 +122,7 @@
   {
     "id": "sql-databases",
     "category": "Data",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/sql-databases-slide.svg",
@@ -137,7 +132,6 @@
         "mn": "SQL ба өгөгдлийн сан",
         "en": "SQL & Databases"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -152,7 +146,7 @@
   {
     "id": "ai-rag-systems",
     "category": "AI",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/ai-rag-systems-slide.svg",
@@ -162,7 +156,6 @@
         "mn": "AI & RAG системүүд",
         "en": "AI & RAG Systems"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -177,7 +170,7 @@
   {
     "id": "machine-learning",
     "category": "AI",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/machine-learning-slide.svg",
@@ -187,7 +180,6 @@
         "mn": "AI & Deep Learning",
         "en": "AI & Deep Learning"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
@@ -202,7 +194,7 @@
   {
     "id": "cybersecurity",
     "category": "Digital",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
       "src": "/assets/courses/cybersecurity-slide.svg",
@@ -212,7 +204,6 @@
         "mn": "Мэдээллийн аюулгүй байдал",
         "en": "Information Security"
       },
-      "generated": true,
       "slide": true
     },
     "title": {
