@@ -2,17 +2,17 @@
   {
     "id": "vip-course",
     "category": "AI",
-    "status": "waitlist",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/vip-course.webp",
-      "width": 720,
-      "height": 394,
+      "src": "/assets/courses/vip-course-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Хиймэл оюун, өгөгдөл, хөгжүүлэлтийг холбосон дүрслэл",
-        "en": "Illustration connecting AI, data and development"
+        "mn": "VIP цогц сургалт",
+        "en": "VIP Complete Course"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "VIP цогц сургалт",
@@ -29,14 +29,14 @@
     "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/data-analysis.webp",
-      "width": 720,
-      "height": 394,
+      "src": "/assets/courses/data-analysis-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Баганан график, өгөгдлийн самбарын дүрслэл",
-        "en": "Illustration of an analytics dashboard and charts"
+        "mn": "Өгөгдлийн шинжилгээ ба Power BI",
+        "en": "Data Analysis & Power BI"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Өгөгдлийн шинжилгээ ба Power BI",
@@ -50,17 +50,17 @@
   {
     "id": "computer-skills",
     "category": "Digital",
-    "status": "waitlist",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/computer-skills.webp",
-      "width": 715,
-      "height": 394,
+      "src": "/assets/courses/computer-skills-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Компьютер, гар, хулгана болон файлуудын дүрслэл",
-        "en": "Illustration of a computer, keyboard, mouse and files"
+        "mn": "Компьютерийн хэрэглээ",
+        "en": "Computer Skills"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Компьютерын хэрэглээ",
@@ -74,18 +74,17 @@
   {
     "id": "python-programming",
     "category": "Code",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/python-programming.jpg",
-      "srcSet": "/assets/courses/python-programming-small.jpg 768w, /assets/courses/python-programming.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/python-programming-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Python программчлалын код, логикийн дүрслэл",
-        "en": "Concept illustration of Python coding and logic"
+        "mn": "Python программчлал",
+        "en": "Python Programming"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Python программчлал",
@@ -99,18 +98,17 @@
   {
     "id": "web-development",
     "category": "Code",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/web-development.jpg",
-      "srcSet": "/assets/courses/web-development-small.jpg 768w, /assets/courses/web-development.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/web-development-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Компьютер, таблет, утсанд зохицох вэбсайтын дүрслэл",
-        "en": "Illustration of responsive web development across devices"
+        "mn": "Вэб хөгжүүлэлт",
+        "en": "Web Development"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Вэб хөгжүүлэлт",
@@ -124,18 +122,17 @@
   {
     "id": "sql-databases",
     "category": "Data",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/sql-databases.jpg",
-      "srcSet": "/assets/courses/sql-databases-small.jpg 768w, /assets/courses/sql-databases.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/sql-databases-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Холбогдсон өгөгдлийн сан, хүснэгтүүдийн дүрслэл",
-        "en": "Illustration of linked databases and structured data"
+        "mn": "SQL ба өгөгдлийн сан",
+        "en": "SQL & Databases"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "SQL ба өгөгдлийн сан",
@@ -149,18 +146,17 @@
   {
     "id": "ai-rag-systems",
     "category": "AI",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/ai-rag-systems.jpg",
-      "srcSet": "/assets/courses/ai-rag-systems-small.jpg 768w, /assets/courses/ai-rag-systems.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/ai-rag-systems-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Баримт бичиг, хайлт, AI туслахын холбоосын дүрслэл",
-        "en": "Illustration of documents connected to a retrieval-based AI assistant"
+        "mn": "AI & RAG системүүд",
+        "en": "AI & RAG Systems"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "AI ба RAG систем",
@@ -174,18 +170,17 @@
   {
     "id": "machine-learning",
     "category": "AI",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/machine-learning.jpg",
-      "srcSet": "/assets/courses/machine-learning-small.jpg 768w, /assets/courses/machine-learning.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/machine-learning-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Өгөгдөл боловсруулж буй мэдрэлийн сүлжээний дүрслэл",
-        "en": "Illustration of a neural network processing data"
+        "mn": "AI & Deep Learning",
+        "en": "AI & Deep Learning"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Машин сургалт",
@@ -199,18 +194,17 @@
   {
     "id": "cybersecurity",
     "category": "Digital",
-    "status": "planned",
+    "status": "open",
     "price": null,
     "image": {
-      "src": "/assets/courses/cybersecurity.jpg",
-      "srcSet": "/assets/courses/cybersecurity-small.jpg 768w, /assets/courses/cybersecurity.jpg 1536w",
-      "width": 1536,
-      "height": 1024,
+      "src": "/assets/courses/cybersecurity-slide.svg",
+      "width": 1200,
+      "height": 674,
       "alt": {
-        "mn": "Бамбай, цоож, цахим хамгаалалтын дүрслэл",
-        "en": "Illustration of a shield and lock for digital security"
+        "mn": "Мэдээллийн аюулгүй байдал",
+        "en": "Information Security"
       },
-      "generated": true
+      "slide": true
     },
     "title": {
       "mn": "Кибер аюулгүй байдал",

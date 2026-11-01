@@ -8,14 +8,17 @@ import { useStore } from '../src/store.js';
 import { createMemoryStore } from '../src/store/memory.js';
 
 const load = (name) => JSON.parse(readFileSync(new URL(`../src/data/${name}.json`, import.meta.url), 'utf8'));
+// Тест нь сайтын контентоос (курсын төлөв өөрчлөгдөхөөс) хамаарахгүйн тулд төлөвүүдийг тогтооно.
+const FIXED_STATUS = { 'data-analysis': 'open', 'vip-course': 'waitlist', 'python-programming': 'planned' };
+const testCourses = () => load('courses').map((c) => (FIXED_STATUS[c.id] ? { ...c, status: FIXED_STATUS[c.id] } : c));
 let store;
 before(async () => {
   if (process.env.TEST_DATABASE_URL) {
     const { createPrismaStore, seedContent } = await import('../src/store/prisma.js');
     store = createPrismaStore({ url: process.env.TEST_DATABASE_URL });
-    await seedContent(store.prisma, { courses: load('courses'), news: load('news') });
+    await seedContent(store.prisma, { courses: testCourses(), news: load('news') });
   } else {
-    store = createMemoryStore();
+    store = createMemoryStore({ courses: testCourses() });
   }
   useStore(store);
 });
