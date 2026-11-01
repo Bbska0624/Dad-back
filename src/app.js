@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { coursesRouter } from './routes/courses.js';
+import { servicesRouter } from './routes/services.js';
 import { newsRouter } from './routes/news.js';
 import { createChatRouter } from './routes/chat.js';
 import { createEnrollmentsRouter } from './routes/enrollments.js';
@@ -43,6 +44,7 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
 
   const api = express.Router();
   api.get('/health', (req, res) => res.json({ status: 'ok' }));
+  api.use('/services', servicesRouter);
   // Анхны хүсэлтээр өгөгдлийн сангийн холболтыг бэлдэнэ (DATABASE_URL байвал Postgres, үгүй бол санах ой).
   api.use(async (req, res, next) => {
     await initStore(env);

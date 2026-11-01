@@ -1,0 +1,169 @@
+[
+  {
+    "number": "01 /",
+    "title": {
+      "mn": "Танилцуулга сайт",
+      "en": "Presentation website"
+    },
+    "text": {
+      "mn": "1 хуудас · Жижиг бизнес, хувь хүн, үйлчилгээ",
+      "en": "1 page · Small businesses, individuals and services"
+    },
+    "price": "500,000₮ – 1,200,000₮",
+    "features": [
+      {
+        "mn": "Захиалгат эсвэл бэлэн загварын дизайн",
+        "en": "Custom or template design"
+      },
+      {
+        "mn": "3–5 хэсэг: танилцуулга, үйлчилгээ",
+        "en": "3–5 sections for your introduction and services"
+      },
+      {
+        "mn": "Гар утас, таблет, компьютерт зохицно",
+        "en": "Responsive on mobile, tablet and desktop"
+      },
+      {
+        "mn": "Холбоо барих форм",
+        "en": "Contact form"
+      },
+      {
+        "mn": "Суурь хиймэл оюунт туслах",
+        "en": "Basic AI chatbot"
+      },
+      {
+        "mn": "Хайлтын системийн үндсэн тохиргоо",
+        "en": "Basic SEO setup"
+      }
+    ],
+    "id": "presentation-website",
+    "image": {
+      "src": "/assets/services/landing-reference.webp",
+      "srcSet": "/assets/services/landing-reference-small.webp 768w, /assets/services/landing-reference.webp 1536w",
+      "width": 1536,
+      "height": 997,
+      "alt": {
+        "mn": "Magic Code AI танилцуулга вебсайтын загвар",
+        "en": "Magic Code AI landing page design"
+      }
+    }
+  },
+  {
+    "number": "02 /",
+    "title": {
+      "mn": "Бизнес вэбсайт",
+      "en": "Business website"
+    },
+    "text": {
+      "mn": "5–10 хуудас · Байгууллага, компани, албан байгууллага",
+      "en": "5–10 pages · Organizations and companies"
+    },
+    "price": "2,000,000₮ – 5,000,000₮",
+    "features": [
+      {
+        "mn": "Брэндэд тохирсон захиалгат дизайн",
+        "en": "Custom design tailored to your brand"
+      },
+      {
+        "mn": "Агуулга удирдах систем",
+        "en": "CMS such as WordPress"
+      },
+      {
+        "mn": "Монгол, англи хэлтэй хиймэл оюунт туслах",
+        "en": "Mongolian / English AI chatbot"
+      },
+      {
+        "mn": "Холбоо барих форм, захиалгын систем",
+        "en": "Contact form and booking system"
+      },
+      {
+        "mn": "Хайлтын системийн үндсэн тохиргоо",
+        "en": "Basic SEO setup"
+      },
+      {
+        "mn": "Газрын зураг, нийгмийн сүлжээний холбоос",
+        "en": "Google Maps and social links"
+      },
+      {
+        "mn": "Блог, мэдээний хэсэг",
+        "en": "Blog and news section"
+      },
+      {
+        "mn": "Гар утсанд зохицсон загвар",
+        "en": "Mobile responsive design"
+      }
+    ],
+    "id": "business-website",
+    "image": {
+      "src": "/assets/services/business-reference.webp",
+      "srcSet": "/assets/services/business-reference-small.webp 768w, /assets/services/business-reference.webp 1066w",
+      "width": 1066,
+      "height": 610,
+      "alt": {
+        "mn": "Хөгжмийн платформын бизнес вэбсайтын загвар",
+        "en": "Music platform business website design"
+      }
+    }
+  },
+  {
+    "number": "03 /",
+    "title": {
+      "mn": "Онлайн дэлгүүр",
+      "en": "E-commerce"
+    },
+    "text": {
+      "mn": "Онлайн дэлгүүр · Бүтээгдэхүүн худалдаа, захиалгын систем",
+      "en": "Online store · Product sales and ordering"
+    },
+    "price": "5,000,000₮ – 15,000,000₮",
+    "features": [
+      {
+        "mn": "Бүтээгдэхүүн, ангиллын удирдлага",
+        "en": "Product and category management"
+      },
+      {
+        "mn": "Сагс, захиалгын систем",
+        "en": "Shopping cart and ordering"
+      },
+      {
+        "mn": "Цахим төлбөрийн холболт",
+        "en": "Payment integration: QPay, SocialPay"
+      },
+      {
+        "mn": "Хэрэглэгчийн бүртгэл, нэвтрэх",
+        "en": "Customer registration and login"
+      },
+      {
+        "mn": "Хиймэл оюунт ухаалаг туслах",
+        "en": "Smart AI chatbot"
+      },
+      {
+        "mn": "Захиалгын удирдлагын систем",
+        "en": "Order management"
+      },
+      {
+        "mn": "Тайлан, дүн шинжилгээ",
+        "en": "Reports and analytics"
+      },
+      {
+        "mn": "Гар утсанд зохицсон загвар",
+        "en": "Mobile responsive design"
+      },
+      {
+        "mn": "Аюулгүй байдал, нөөцлөлт",
+        "en": "Security and backups"
+      }
+    ],
+    "id": "ecommerce",
+    "image": {
+      "src": "/assets/services/ecommerce-reference.webp",
+      "srcSet": "/assets/services/ecommerce-reference-small.webp 768w, /assets/services/ecommerce-reference.webp 1216w",
+      "width": 1216,
+      "height": 802,
+      "alt": {
+        "mn": "Үүргэвчний онлайн дэлгүүрийн загвар",
+        "en": "Backpack ecommerce website design"
+      }
+    }
+  }
+]
