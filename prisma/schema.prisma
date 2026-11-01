@@ -137,3 +137,71 @@ model RequestLimit {
   @@index([expiresAt])
   @@map("request_limits")
 }
+
+// Сайтын сагснаас үүссэн курсын захиалга (frontend docs/COURSE-CHECKOUT.md).
+// items: [{ courseId, title: {mn,en}, price }] — үнийг сервер DB-ээс тооцоолно.
+model CourseOrder {
+  id          String         @id // cord_...
+  userId      String         @map("user_id")
+  items       Json
+  amount      Int? // awaiting_quote үед null
+  currency    String         @default("MNT")
+  status      String // awaiting_quote | pending_payment | pending_review | paid | cancelled
+  kind        String         @default("course") // course | topup (хэтэвч цэнэглэлт, items хоосон)
+  method      String? // bank | qpay | wallet
+  qpayInvoiceId String?      @unique @map("qpay_invoice_id")
+  qpayInvoice Json?          @map("qpay_invoice")
+  reportedAt  DateTime?      @map("reported_at") // хэрэглэгч "шилжүүлсэн" гэж мэдэгдсэн
+  paidAt      DateTime?      @map("paid_at")
+  paidBy      String?        @map("paid_by") // баталсан админы id
+  cancelledAt DateTime?      @map("cancelled_at")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  access      CourseAccess[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+  @@map("course_orders")
+}
+
+// Хичээл үзэх эрх. Төлбөр батлагдахад (эсвэл Power BI-ийн түр эрх) үүснэ, 3 сарын хугацаатай.
+model CourseAccess {
+  id            String       @id // acc_...
+  userId        String       @map("user_id")
+  courseId      String       @map("course_id")
+  paymentStatus String       @map("payment_status") // paid | waived
+  accessType    String?      @map("access_type") // temporary (Power BI)
+  orderId       String?      @map("order_id")
+  order         CourseOrder? @relation(fields: [orderId], references: [id])
+  grantKey      String       @unique @map("grant_key") // давхардуулахгүй: order:<id>:<course> | waived:<course>:<user>
+  activatedAt   DateTime     @map("activated_at")
+  expiresAt     DateTime     @map("expires_at")
+  revokedAt     DateTime?    @map("revoked_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  @@index([userId, courseId])
+  @@map("course_access")
+}
+
+model Wallet {
+  userId    String   @id @map("user_id")
+  balance   Int      @default(0) // CHECK balance >= 0
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("wallets")
+}
+
+// Хэтэвчийн гүйлгээ бүр. Зөвхөн нэмэгдэнэ: UPDATE/DELETE-ийг trigger хориглодог.
+model WalletLedger {
+  id           String   @id // wtx_...
+  userId       String   @map("user_id")
+  amount       Int // + орлого, - зарлага
+  balanceAfter Int      @map("balance_after")
+  type         String // topup | purchase | refund
+  orderId      String   @map("order_id")
+  key          String   @unique // нэг захиалгыг давхар бичихээс хамгаална
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("wallet_ledger")
+}

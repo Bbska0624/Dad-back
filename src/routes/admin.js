@@ -49,6 +49,46 @@ export function createAdminRouter(options = {}) {
     await db[enrollment ? 'enrollment' : 'order'].update({ where: { id }, data });
     res.json({ id, action });
   });
+  // Сайтын курсын захиалга: админ шилжүүлгийг шалгаад "Төлөгдсөн" дарахад хичээл үзэх эрх 3 сараар үүснэ.
+  router.get('/course-orders', async (req, res) => {
+    const { toOrder } = await import('./checkout.js');
+    const db = database();
+    const rows = await db.courseOrder.findMany({ orderBy: { createdAt: 'desc' }, take: 500 });
+    const profiles = await db.profile.findMany({ where: { id: { in: [...new Set(rows.map((row) => row.userId))] } }, select: { id: true, name: true, email: true, phone: true } });
+    const byId = new Map(profiles.map((p) => [p.id, p]));
+    res.json(rows.map((row) => ({ ...toOrder(row), userId: row.userId, user: byId.get(row.userId) ?? null,
+      paidBy: row.paidBy, cancelledAt: row.cancelledAt?.toISOString() ?? null })));
+  });
+  router.post('/course-orders/:id/:action', async (req, res) => {
+    const { id, action } = req.params;
+    if (!['paid', 'cancelled'].includes(action)) throw validationError({ action: 'Invalid action' });
+    const { settleOrder } = await import('../services/courseAccess.js');
+    const { toOrder } = await import('./checkout.js');
+    const row = await database().$transaction(async (tx) => {
+      const order = await tx.courseOrder.findUnique({ where: { id } });
+      if (!order) throw notFound('Order');
+      if (action === 'paid') {
+        if (order.status === 'paid') return order;
+        if (!['pending_payment', 'pending_review'].includes(order.status)) throw new HttpError(409, 'payment_not_ready', 'Only unpaid, priced orders can be marked paid');
+        await settleOrder(tx, order, req.user.id);
+      } else {
+        if (order.status === 'cancelled') return order;
+        if (order.kind === 'topup' && order.status === 'paid') throw new HttpError(409, 'topup_settled', 'A confirmed top-up cannot be cancelled');
+        // Хэтэвчээр төлсөн захиалгыг цуцлахад мөнгө нь хэтэвчид буцна.
+        if (order.status === 'paid' && order.method === 'wallet') {
+          const { moveWallet } = await import('../services/wallet.js');
+          await moveWallet(tx, { userId: order.userId, delta: order.amount, type: 'refund', orderId: id });
+        }
+        // Төлөгдсөн захиалгыг цуцлахад (буцаалт) хичээл үзэх эрх шууд хаагдана.
+        await tx.courseAccess.updateMany({ where: { orderId: id, revokedAt: null }, data: { revokedAt: new Date() } });
+        await tx.courseOrder.update({ where: { id }, data: { status: 'cancelled', cancelledAt: new Date() } });
+      }
+      await tx.activity.create({ data: { id: newId('act'), actorId: req.user.id, action, type: 'course-orders',
+        title: { mn: `Захиалга ${id}`, en: `Order ${id}` } } });
+      return tx.courseOrder.findUnique({ where: { id } });
+    });
+    res.json(toOrder(row));
+  });
   router.get('/:type', async (req, res) => res.json(await database()[modelName(req.params.type)].findMany({ orderBy: { createdAt: 'desc' } })));
   const save = async (req, res) => {
     const { type, id } = req.params;
