@@ -6,11 +6,12 @@ Frontend нь Supabase Auth-аар нэвтэрч, access token-оо Dad-back AP
 
 Dad-back/.env: DATABASE_URL, DIRECT_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, SUPABASE_STORAGE_BUCKET.
 mci-web/.env.local: VITE_USE_MOCK=false, VITE_API_URL=/api, VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY.
+Admin frontend-ийн local тохиргоо: `frontend/.env.local` дотор `VITE_USE_MOCK=false`, `VITE_API_URL=/api`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Supabase Auth-ийн Redirect URLs жагсаалтад `http://127.0.0.1:5173/**` нэмнэ.
 Нууц database URL болон secret key зөвхөн backend-д хадгалагдана.
 
 1. Dad-back дотор npm run db:deploy: schema migration-уудыг ажиллуулна.
 2. npm run db:import-site: эхний сургалт, мэдээ болон тэдгээрийн зургуудыг Supabase-д оруулна. Админаар зассан мөрүүдийг өөрчлөхгүй; анхны мөрүүдийн зургуудыг Storage руу шилжүүлж, нүүр хуудсын тохиргоог нөхнө. site-images public bucket байхгүй бол үүсгэнэ. Upload эрх зөвхөн серверт байна.
-3. Сайтын /register хэсгээр өөрийн имэйлээр бүртгүүлж, имэйлээ баталгаажуулна.
+3. Supabase Dashboard → Authentication → Users → Add user хэсгээс админ хэрэглэгч үүсгэнэ. Админ frontend-д бүртгүүлэх хуудас байхгүй.
 4. `node scripts/set-admin.mjs admin@example.com` ажиллуулж баталгаажсан бүртгэлд admin эрх өгнө. Supabase Auth хэрэглэгчийн app_metadata.role талбарт admin эрхийг зөвхөн итгэмжлэгдсэн серверийн admin API-аар тохируулна. user_metadata.role ашиглахгүй.
 5. Backend болон frontend-ийг дахин асаана.
 

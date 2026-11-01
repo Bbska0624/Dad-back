@@ -32,6 +32,19 @@ npm test                 # 29 тест, санах ой дээр (Gemini-г жи
 
 Node.js 20.12+ хэрэгтэй. `npm run dev` нь `.env` файлыг автоматаар уншина.
 
+## Login болон админ frontend
+
+Frontend-ийг `frontend` хавтас дотроос ажиллуулна. Supabase URL болон publishable key-г `frontend/.env.local`-д тохируулна; secret key, database URL-ийг frontend-д бүү оруул.
+
+```powershell
+Copy-Item frontend\.env.example frontend\.env.local
+Set-Location frontend
+npm ci
+npm run dev
+```
+
+Backend-ийг тусдаа terminal-д root хавтаснаас `npm run dev` командаар асаана. Frontend `http://127.0.0.1:5173` дээр нээгдэж, `/api` хүсэлтийг backend-ийн `http://127.0.0.1:4000` руу дамжуулна. Admin dashboard-д Supabase Dashboard → Authentication → Users → Add user хэсгээс хэрэглэгч үүсгэсний дараа [SUPABASE.md](SUPABASE.md)-ийн дагуу серверийн `set-admin` скриптээр admin эрх олгоно. Demo нэвтрэх эрх байхгүй.
+
 ## Өгөгдлийн сан (PostgreSQL)
 
 Анх удаа (эсвэл шинэ migration ирсэн үед):
