@@ -115,7 +115,7 @@ test('банкны төлбөр → 201, дансны заавар, reference = 
     assert.equal(body.enrollmentId, enr.id);
     assert.equal(body.status, 'pending');
     assert.equal(body.currency, 'MNT');
-    assert.equal(body.amount, null); // курсын үнэ одоогоор батлагдаагүй (price: null)
+    assert.equal(body.amount, testCourses().find((c) => c.id === 'data-analysis').price); // үнийг сервер курсын мэдээллээс авна
     assert.deepEqual(body.instructions, {
       bankName: 'Хаан банк', accountNumber: '5000123456', accountName: 'Magic Code AI', reference: enr.id,
     });

@@ -28,6 +28,32 @@ GET /api/account/records: өөрийн элсэлт/захиалга.
 POST /api/account/records: {type: order, items: string[]} захиалгын хүсэлт. Бодит төлбөр/барааны үнийн тооцоо хийхгүй.
 POST /api/enrollments: сургалтын бүртгэл; authenticated бол userId, email-ийг баталгаажсан session-оос авна.
 
+## Сайтын нэвтрэлт ба сургалтын захиалга (mci.mn)
+
+Сайт `mci.mn/api/*`-г Vercel proxy-оор энэ backend руу дамжуулдаг тул session cookie нь mci.mn домэйн дээр хадгалагдана.
+
+- POST /api/auth/register {name, email, password}: имэйл баталгаажуулалт асаалттай бол 202 {confirmationRequired, email}; унтраалттай бол 201 profile + cookie. Бүртгэлтэй имэйл бол 409 duplicate.
+- POST /api/auth/login {email, password}: profile + cookie. Буруу бол 401 invalid_credentials, баталгаажаагүй бол 403 email_not_confirmed.
+- GET /api/auth/me: {id, name, email, role} эсвэл 401. Access токены хугацаа дуусвал refresh токеноор автоматаар сэргээнэ.
+- POST /api/auth/logout: 204, cookie устгана.
+- GET /api/auth/confirm?token_hash=&type=email: имэйл дэх линк. Баталгаажуулаад нэвтрүүлж /account руу шилжүүлнэ.
+- POST /api/orders {courseIds}; GET /api/me/orders; POST /api/orders/:id/bank-transfer; POST /api/orders/:id/qpay (QPay холбогдох хүртэл 503 qpay_unavailable).
+- GET /api/me/courses: идэвхтэй эрхүүд. Power BI (data-analysis) курсын 3 сарын түр эрхийг хэрэглэгч бүрт нэг удаа олгоно.
+- GET /api/me/courses/:courseId/lessons: зөвхөн эрхтэй үед, эс бөгөөс 403 payment_required.
+- GET /api/admin/course-orders; POST /api/admin/course-orders/:id/paid|cancelled: админ шилжүүлгийг шалгаад батлахад эрх 3 сараар нээгдэнэ; төлөгдсөн захиалгыг цуцлахад эрх хаагдана. Админ самбарын "Сургалтын төлбөр" таб.
+
+Cookie: `mci_at`, `mci_rt` — HttpOnly, SameSite=Lax, Path=/api, production-д Secure. Cookie-тэй POST хүсэлтийн Origin нь CORS_ORIGINS / CORS_ORIGIN_REGEX-д байх ёстой.
+
+Supabase Dashboard тохиргоо (нэг удаа):
+
+1. Authentication → Sign In / Providers → Email: **Confirm email** асаалттай.
+2. Authentication → URL Configuration: **Site URL** = `https://www.mci.mn`.
+3. Authentication → Emails → **Confirm signup** загварын линкийг дараахаар солино:
+   `<a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=email">Баталгаажуулах</a>`
+4. Supabase-ийн үнэгүй имэйл илгээлт цагт цөөн имэйлээр хязгаарлагдана. Хэрэглэгч олширвол Authentication → Emails → SMTP Settings-д тусдаа имэйл сервис холбоно.
+
+Backend env: `SITE_URL` (заавал биш, анхдагч `https://www.mci.mn`).
+
 ## Хамгаалалт
 
 Database хүснэгтүүд RLS-тай, browser-оос Data API-аар шууд хандах policy байхгүй. PostgreSQL холболттой backend эрх, нийтлэлийн төлөв, оролтыг шалгана. Сургалт/мэдээ хадгалах болон үйлдлийн түүх нэг transaction-д бичигдэнэ. Устгал soft delete тул сэргээж болно. Production-д DATABASE_URL байхгүй бол түр санах ой руу шилжихгүй.

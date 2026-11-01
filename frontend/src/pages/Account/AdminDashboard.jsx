@@ -9,6 +9,7 @@ import { getAdminActivity, getAdminContent } from '../../api/admin';
 import AdminContentManager from './AdminContentManager';
 import AdminRecordsManager from './AdminRecordsManager';
 import AdminUsers from './AdminUsers';
+import AdminCourseOrders from './AdminCourseOrders';
 import { textOf } from './adminTools';
 import { enrollmentAnalytics } from './adminAnalytics';
 import WorkspaceHeading from './WorkspaceHeading';
@@ -17,6 +18,7 @@ import './admin.css';
 const ADMIN_TABS = [
   { id: 'overview', mn: 'Тойм', en: 'Overview' },
   { id: 'courses', mn: 'Сургалтууд', en: 'Courses' },
+  { id: 'course-orders', mn: 'Сургалтын төлбөр', en: 'Course payments' },
   { id: 'enrollments', mn: 'Элсэлтүүд', en: 'Enrollments' },
   { id: 'orders', mn: 'Захиалгууд', en: 'Orders' },
   { id: 'news', mn: 'Мэдээлэл', en: 'Content' },
@@ -128,6 +130,9 @@ function AdminWorkspace() {
       <section id="admin-courses" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-courses" tabIndex={0} hidden={activeTab !== 'courses'}>
         <AdminContentManager type="courses" api={courseApi} />
       </section>
+      <section id="admin-course-orders" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-course-orders" tabIndex={0} hidden={activeTab !== 'course-orders'}>
+        {activeTab === 'course-orders' && <AdminCourseOrders />}
+      </section>
       <section id="admin-enrollments" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-enrollments" tabIndex={0} hidden={activeTab !== 'enrollments'}>
         <AdminRecordsManager type="course" days={days} />
       </section>
@@ -143,7 +148,7 @@ function AdminWorkspace() {
       <section id="admin-activity" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-activity" tabIndex={0} hidden={activeTab !== 'activity'}>
         <div className="admin-card-heading"><div><h2>{t('Үйлдлийн түүх', 'Activity log')}</h2><p>{t('Мэдээ, сургалтын сүүлийн 150 өөрчлөлт', 'The latest 150 story and course changes')}</p></div></div>
         <ApiState loading={activityApi.loading} error={activityApi.error} onRetry={activityApi.reload} />
-        <ul className="admin-activity-list">{activityApi.data?.map((entry) => <li key={entry.id}><div><strong>{textOf(entry.title, lang)}</strong><span>{({ create: t('Нэмсэн', 'Created'), update: t('Зассан', 'Edited'), delete: t('Устгасан', 'Deleted'), restore: t('Сэргээсэн', 'Restored'), published: t('Нийтэлсэн', 'Published'), draft: t('Ноорог болгосон', 'Moved to draft'), archived: t('Архивласан', 'Archived') })[entry.action]}</span></div><time dateTime={entry.at}>{new Date(entry.at).toLocaleString(locale)}</time></li>)}</ul>
+        <ul className="admin-activity-list">{activityApi.data?.map((entry) => <li key={entry.id}><div><strong>{textOf(entry.title, lang)}</strong><span>{({ create: t('Нэмсэн', 'Created'), update: t('Зассан', 'Edited'), delete: t('Устгасан', 'Deleted'), restore: t('Сэргээсэн', 'Restored'), published: t('Нийтэлсэн', 'Published'), paid: t('Төлбөр баталсан', 'Payment confirmed'), cancelled: t('Захиалга цуцалсан', 'Order cancelled'), draft: t('Ноорог болгосон', 'Moved to draft'), archived: t('Архивласан', 'Archived') })[entry.action]}</span></div><time dateTime={entry.at}>{new Date(entry.at).toLocaleString(locale)}</time></li>)}</ul>
         {activityApi.data?.length === 0 && <p className="admin-empty-inline">{t('Одоогоор өөрчлөлт хийгдээгүй байна.', 'No changes yet.')}</p>}
       </section>
     </main>

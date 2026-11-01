@@ -14,3 +14,5 @@ export const changeAdminRecord = (id, action) => request(`/admin/records/${encod
 export const getAdminUsers = ({ signal, token } = {}) => request('/admin/users', { signal, token });
 export const updateAdminUser = (id, body) => request(`/admin/users/${encodeURIComponent(id)}`, { method: 'PUT', body });
 export const uploadAdminImage = (dataUrl) => request('/admin/images', { method: 'POST', body: { dataUrl } });
+export const getCourseOrders = ({ signal } = {}) => request('/admin/course-orders', { signal, mock: () => [] });
+export const changeCourseOrder = (id, action) => request(`/admin/course-orders/${encodeURIComponent(id)}/${action}`, { method: 'POST' });

@@ -11,20 +11,13 @@ import { errorHandler, notFoundHandler } from './errors.js';
 import { initStore } from './store.js';
 import { createAdminRouter } from './routes/admin.js';
 import { createAccountRouter } from './routes/account.js';
+import { createAuthRouter } from './routes/auth.js';
+import { createCheckoutRouter } from './routes/checkout.js';
+import { originMatcher } from './origins.js';
 
-// CORS_ORIGINS="https://www.mci.mn,https://mci.mn" — таслалаар тусгаарлана. Хоосон бол dev хаягууд л зөвшөөрөгдөнө.
-const DEFAULT_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173'];
-const allowedOrigins = (process.env.CORS_ORIGINS || DEFAULT_ORIGINS.join(','))
-  .split(',').map((o) => o.trim()).filter(Boolean);
-
-// CORS_ORIGIN_REGEX="^https://mci-web-[a-z0-9-]+\.vercel\.app$" — Vercel Preview хаягуудыг зөвшөөрөхөд.
 function buildOriginCheck(env) {
-  const pattern = env.CORS_ORIGIN_REGEX?.trim();
-  const regex = pattern ? new RegExp(pattern) : null;
-  return (origin, callback) => {
-    if (!origin) return callback(null, false);
-    callback(null, allowedOrigins.includes(origin) || Boolean(regex?.test(origin)));
-  };
+  const isAllowed = originMatcher(env);
+  return (origin, callback) => callback(null, isAllowed(origin));
 }
 
 /**
@@ -33,8 +26,11 @@ function buildOriginCheck(env) {
  * @param {{ windowMs: number, max: number }} [options.chatLimit]
  * @param {{ windowMs: number, max: number }} [options.formLimit]  Бүртгэл, төлбөрийн хязгаар
  * @param {object} [options.env]  Тохиргоо (тестэд солино)
+ * @param {Function} [options.verifyUser]  Supabase токен шалгагч (тестэд солино)
+ * @param {object} [options.auth]  Supabase Auth клиент (тестэд солино), src/services/session.js
+ * @param {{ windowMs: number, max: number }} [options.authLimit]  Нэвтрэх/бүртгүүлэх хязгаар
  */
-export function createApp({ generateReply = geminiReply, chatLimit, formLimit, env = process.env, verifyUser } = {}) {
+export function createApp({ generateReply = geminiReply, chatLimit, formLimit, env = process.env, verifyUser, auth, authLimit } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', 1); // Vercel-ийн proxy-ийн ард жинхэнэ IP-г авна
@@ -52,13 +48,17 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
   });
   api.use('/courses', coursesRouter);
   api.use('/news', newsRouter);
-  api.use('/admin', createAdminRouter({ env, verifyUser }));
-  api.use('/account', createAccountRouter({ env, verifyUser }));
+  const session = { env, verifyUser, auth };
+  api.use('/auth', createAuthRouter({ ...session, limit: rateLimit(authLimit ?? { windowMs: 60_000, max: 10 }) }));
+  api.use('/admin', createAdminRouter(session));
+  api.use('/account', createAccountRouter(session));
   api.use('/chat', createChatRouter({ generateReply, limit }));
   // Спамаас сэргийлэх: нэг IP-ээс минутад 20 бүртгэл/төлбөрийн хүсэлт
   const formLimiter = rateLimit(formLimit ?? { windowMs: 60_000, max: 20 });
   api.use('/enrollments', createEnrollmentsRouter({ limit: formLimiter, env, verifyUser }));
   api.use('/payments', createPaymentsRouter({ limit: formLimiter, env }));
+  // Сайтын сагс, захиалга, хичээл үзэх эрх: /orders, /me/orders, /me/courses
+  api.use(createCheckoutRouter({ ...session, limit: formLimiter }));
 
   app.use('/api', api);
   app.use(notFoundHandler);
