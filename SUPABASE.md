@@ -42,3 +42,11 @@ Database хүснэгтүүд RLS-тай, browser-оос Data API-аар шуу�
 ## Шалгалт
 
 `npm test` нь API, эрхийн шалгалт болон оролтын тестүүд. `node scripts/verify-cloud.mjs` нь тохируулсан database дээр админы CRUD, нийтлэл, profile, элсэлт/захиалгыг шалгана; бүх түр өгөгдөл нэг transaction-д орж эцэст нь rollback хийгдэнэ. Серверийн жинхэнэ Auth шалгалтыг энэ тусдаа процессын тестэд injected verifier-ээр орлуулдаг; production серверт тестийн нэвтрэх зам нэмдэггүй.
+
+## Өгөгдлийн сангийн бүтэц
+
+Prisma-гийн гаднах `kb_sources`, `kb_chunks`, `kb_rate_limits` хүснэгтүүд, `kb_match_chunks`, `kb_rate_limit_hit` функцууд чатботын мэдлэгийн санд ашиглагддаг. Тэдгээрийн бүтцийн хуулбар: `prisma/external/kb_schema.sql`.
+
+Энэ санд `prisma migrate dev`, `prisma migrate reset`, `prisma db push` ажиллуулж болохгүй: `kb_*` хүснэгтүүдийг устгаж эсвэл бүх өгөгдлийг цэвэрлэж мэднэ. Ажиллаж буй санд зөвхөн `npm run db:deploy` хэрэглэнэ.
+
+`20261031120000_security_limits` migration файлыг санд бичигдсэн бүтцээс сэргээсэн тул checksum нь анхны файлаас ялгаатай байж болно.

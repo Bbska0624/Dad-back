@@ -72,7 +72,8 @@ model Enrollment {
   createdAt       DateTime  @default(now()) @map("created_at")
   payments        Payment[]
 
-  @@unique([courseId, emailNormalized])
+  // Unique биш: устгасан (soft delete) бүртгэлтэй хүн дахин бүртгүүлж чадна. Давхардлыг store шалгана.
+  @@index([courseId, emailNormalized])
   @@index([createdAt])
   @@map("enrollments")
 }
@@ -125,4 +126,14 @@ model Payment {
 
   @@index([enrollmentId])
   @@map("payments")
+}
+
+// Хүсэлтийн тоо хязгаарлагч. security_limits migration-оор үүссэн.
+model RequestLimit {
+  id        String   @id
+  count     Int      @default(1)
+  expiresAt DateTime @map("expires_at")
+
+  @@index([expiresAt])
+  @@map("request_limits")
 }

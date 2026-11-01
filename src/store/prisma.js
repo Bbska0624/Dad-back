@@ -73,6 +73,14 @@ export function createPrismaStore({ url, client } = {}) {
     },
 
     async insertEnrollment(record) {
+      const emailNormalized = record.email.toLowerCase();
+      // Устгаагүй бүртгэл л давхардалд тооцогдоно (soft delete хийсэн хүн дахин бүртгүүлж чадна).
+      const existing = await prisma.enrollment.findFirst({
+        where: { courseId: record.courseId, emailNormalized, deletedAt: null },
+        select: { id: true },
+      });
+      if (existing) throw new HttpError(409, 'already_enrolled', 'Already enrolled');
+
       try {
         const row = await prisma.enrollment.create({
           data: {
@@ -81,7 +89,7 @@ export function createPrismaStore({ url, client } = {}) {
             userId: record.userId ?? null,
             name: record.name,
             email: record.email,
-            emailNormalized: record.email.toLowerCase(),
+            emailNormalized,
             phone: record.phone,
             status: record.status,
             createdAt: new Date(record.createdAt),
