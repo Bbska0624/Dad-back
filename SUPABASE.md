@@ -42,6 +42,10 @@ POST /api/enrollments: сургалтын бүртгэл; authenticated бол u
 - GET /api/me/courses/:courseId/lessons: зөвхөн эрхтэй үед, эс бөгөөс 403 payment_required.
 - GET /api/admin/course-orders; POST /api/admin/course-orders/:id/paid|cancelled: админ шилжүүлгийг шалгаад батлахад эрх 3 сараар нээгдэнэ; төлөгдсөн захиалгыг цуцлахад эрх хаагдана. Админ самбарын "Сургалтын төлбөр" таб.
 
+- GET /api/me/wallet: үлдэгдэл, гүйлгээ, нээлттэй цэнэглэлт. POST /api/me/wallet/topups {amount}: цэнэглэлтийн захиалга (`kind: topup`), цааш bank-transfer эсвэл qpay-ээр төлнө.
+- POST /api/orders/:id/wallet: хэтэвчээс шууд төлнө, үлдэгдэл хүрэхгүй бол 409 insufficient_balance.
+- POST /api/orders/:id/qpay, /qpay/check; GET|POST /api/qpay/callback: `QPAY_*` тохируулсны дараа идэвхжинэ. Callback-ийн агуулгад итгэхгүй, гарын үсгийг шалгаад төлбөрийг QPay-ээс асууна.
+
 Cookie: `mci_at`, `mci_rt` — HttpOnly, SameSite=Lax, Path=/api, production-д Secure. Cookie-тэй POST хүсэлтийн Origin нь CORS_ORIGINS / CORS_ORIGIN_REGEX-д байх ёстой.
 
 Supabase Dashboard тохиргоо (нэг удаа):
@@ -69,3 +73,11 @@ Database хүснэгтүүд RLS-тай, browser-оос Data API-аар шуу�
 ## Шалгалт
 
 `npm test` нь API, эрхийн шалгалт болон оролтын тестүүд. `node scripts/verify-cloud.mjs` нь тохируулсан database дээр админы CRUD, нийтлэл, profile, элсэлт/захиалгыг шалгана; бүх түр өгөгдөл нэг transaction-д орж эцэст нь rollback хийгдэнэ. Серверийн жинхэнэ Auth шалгалтыг энэ тусдаа процессын тестэд injected verifier-ээр орлуулдаг; production серверт тестийн нэвтрэх зам нэмдэггүй.
+
+## Өгөгдлийн сангийн бүтэц
+
+Prisma-гийн гаднах `kb_sources`, `kb_chunks`, `kb_rate_limits` хүснэгтүүд, `kb_match_chunks`, `kb_rate_limit_hit` функцууд чатботын мэдлэгийн санд ашиглагддаг. Тэдгээрийн бүтцийн хуулбар: `prisma/external/kb_schema.sql`.
+
+Энэ санд `prisma migrate dev`, `prisma migrate reset`, `prisma db push` ажиллуулж болохгүй: `kb_*` хүснэгтүүдийг устгаж эсвэл бүх өгөгдлийг цэвэрлэж мэднэ. Ажиллаж буй санд зөвхөн `npm run db:deploy` хэрэглэнэ.
+
+`20261031120000_security_limits` migration файлыг санд бичигдсэн бүтцээс сэргээсэн тул checksum нь анхны файлаас ялгаатай байж болно.

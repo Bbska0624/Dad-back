@@ -1,10 +1,12 @@
 // Хичээл үзэх эрх (frontend src/data/courseAccess.js-тэй ижил дүрэм).
 import { readFileSync } from 'node:fs';
 import { newId } from '../store.js';
+import { moveWallet } from './wallet.js';
 
 export const COURSE_ACCESS_MONTHS = 3;
 export const TEMPORARY_FREE_COURSE = 'data-analysis'; // Power BI: хэрэглэгч бүрт нэг удаа 3 сарын түр эрх
 export const PENDING_STATUSES = ['awaiting_quote', 'pending_payment', 'pending_review'];
+export const PAYABLE_STATUSES = ['pending_payment', 'pending_review'];
 
 const lessons = JSON.parse(readFileSync(new URL('../data/lessons.json', import.meta.url), 'utf8'));
 export const courseLessons = (courseId) => (Object.hasOwn(lessons, courseId) ? structuredClone(lessons[courseId]) : null);
@@ -53,9 +55,20 @@ export async function hasActiveAccess(db, userId, courseId, now = new Date()) {
   return Boolean(await db.courseAccess.findFirst({ where: { ...activeWhere(userId, now), courseId }, select: { id: true } }));
 }
 
-/** Төлбөрийг баталж, эрх үүсгэнэ. tx нь Prisma-ийн transaction. */
-export async function settleOrder(tx, order, adminId, now = new Date()) {
-  await tx.courseOrder.update({ where: { id: order.id }, data: { status: 'paid', paidAt: now, paidBy: adminId } });
+/**
+ * Төлбөрийг баталж, эрх үүсгэнэ (цэнэглэлт бол хэтэвчид орлого болгоно). tx нь Prisma-ийн transaction.
+ * Статусын нөхцөлтэй UPDATE нь давтан callback, зэрэг хүсэлтийг нэг л удаа нэвтрүүлнэ; давтагдвал false.
+ */
+export async function settleOrder(tx, order, adminId, now = new Date(), method = order.method ?? 'bank') {
+  const claimed = await tx.courseOrder.updateMany({
+    where: { id: order.id, status: { in: PAYABLE_STATUSES } },
+    data: { status: 'paid', paidAt: now, paidBy: adminId, method },
+  });
+  if (!claimed.count) return false;
+  if (order.kind === 'topup') {
+    await moveWallet(tx, { userId: order.userId, delta: order.amount, type: 'topup', orderId: order.id, now });
+    return true;
+  }
   for (const item of order.items) {
     await tx.courseAccess.upsert({
       where: { grantKey: `order:${order.id}:${item.courseId}` },
@@ -64,4 +77,5 @@ export async function settleOrder(tx, order, adminId, now = new Date()) {
       update: { revokedAt: null },
     });
   }
+  return true;
 }

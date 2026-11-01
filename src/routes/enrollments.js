@@ -28,7 +28,7 @@ export function createEnrollmentsRouter({ limit, env, verifyUser }) {
     if (!course) throw notFound('Course');
     if (course.status === 'planned') throw new HttpError(409, 'enrollment_closed', 'Enrollment is not open');
 
-    // Давхар бүртгэлийг store шалгаж 409 already_enrolled шиднэ (DB-д unique constraint).
+    // Давхар бүртгэлийг store шалгаж 409 already_enrolled шиднэ (устгаагүй бүртгэлийг тооцно).
     const record = await insertEnrollment({
       id: newId('enr'),
       courseId: course.id,

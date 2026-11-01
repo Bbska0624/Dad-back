@@ -27,7 +27,7 @@ export default function AdminCourseOrders() {
     pending_review: t('Шилжүүлсэн гэж мэдэгдсэн', 'Transfer reported'), pending_payment: t('Төлбөр хүлээгдэж буй', 'Awaiting payment'),
     awaiting_quote: t('Үнэ тодорхойгүй', 'Awaiting quote'), paid: t('Төлөгдсөн', 'Paid'), cancelled: t('Цуцалсан', 'Cancelled'),
   })[value] || value;
-  const titles = (order) => order.items.map((item) => textOf(item.title, lang) || item.courseId);
+  const titles = (order) => order.kind === 'topup' ? [t('Хэтэвч цэнэглэлт', 'Wallet top-up')] : order.items.map((item) => textOf(item.title, lang) || item.courseId);
   const rows = (api.data || []).filter((order) => (status === 'all' || order.status === status)
     && matchSearch(query, [order.id, order.user?.name, order.user?.email, order.user?.phone, ...titles(order)]));
 

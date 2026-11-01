@@ -73,6 +73,12 @@ export function createAdminRouter(options = {}) {
         await settleOrder(tx, order, req.user.id);
       } else {
         if (order.status === 'cancelled') return order;
+        if (order.kind === 'topup' && order.status === 'paid') throw new HttpError(409, 'topup_settled', 'A confirmed top-up cannot be cancelled');
+        // Хэтэвчээр төлсөн захиалгыг цуцлахад мөнгө нь хэтэвчид буцна.
+        if (order.status === 'paid' && order.method === 'wallet') {
+          const { moveWallet } = await import('../services/wallet.js');
+          await moveWallet(tx, { userId: order.userId, delta: order.amount, type: 'refund', orderId: id });
+        }
         // Төлөгдсөн захиалгыг цуцлахад (буцаалт) хичээл үзэх эрх шууд хаагдана.
         await tx.courseAccess.updateMany({ where: { orderId: id, revokedAt: null }, data: { revokedAt: new Date() } });
         await tx.courseOrder.update({ where: { id }, data: { status: 'cancelled', cancelledAt: new Date() } });

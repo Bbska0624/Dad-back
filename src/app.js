@@ -13,6 +13,7 @@ import { createAdminRouter } from './routes/admin.js';
 import { createAccountRouter } from './routes/account.js';
 import { createAuthRouter } from './routes/auth.js';
 import { createCheckoutRouter } from './routes/checkout.js';
+import { createWalletRouter } from './routes/wallet.js';
 import { originMatcher } from './origins.js';
 
 function buildOriginCheck(env) {
@@ -29,8 +30,9 @@ function buildOriginCheck(env) {
  * @param {Function} [options.verifyUser]  Supabase токен шалгагч (тестэд солино)
  * @param {object} [options.auth]  Supabase Auth клиент (тестэд солино), src/services/session.js
  * @param {{ windowMs: number, max: number }} [options.authLimit]  Нэвтрэх/бүртгүүлэх хязгаар
+ * @param {object} [options.qpay]  QPay клиент (тестэд солино)
  */
-export function createApp({ generateReply = geminiReply, chatLimit, formLimit, env = process.env, verifyUser, auth, authLimit } = {}) {
+export function createApp({ generateReply = geminiReply, chatLimit, formLimit, env = process.env, verifyUser, auth, authLimit, qpay } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', 1); // Vercel-ийн proxy-ийн ард жинхэнэ IP-г авна
@@ -59,6 +61,7 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
   api.use('/payments', createPaymentsRouter({ limit: formLimiter, env }));
   // Сайтын сагс, захиалга, хичээл үзэх эрх: /orders, /me/orders, /me/courses
   api.use(createCheckoutRouter({ ...session, limit: formLimiter }));
+  api.use(createWalletRouter({ ...session, limit: formLimiter, qpay }));
 
   app.use('/api', api);
   app.use(notFoundHandler);

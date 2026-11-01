@@ -8,18 +8,18 @@ import { authMiddleware } from '../services/supabase.js';
 import { HttpError, notFound, validationError } from '../errors.js';
 import { newId } from '../store.js';
 import { visibleContent } from '../services/content.js';
+import { qpayConfigured } from '../services/qpay.js';
 import { activeAccess, courseLessons, ensureTemporaryAccess, hasActiveAccess, PENDING_STATUSES, TEMPORARY_FREE_COURSE } from '../services/courseAccess.js';
 
 const MAX_ITEMS = 20;
-const qpayConfigured = () => false; // QPay (7-р алхам) холбогдох хүртэл
 
-export function toOrder(row) {
+export function toOrder(row, env = process.env) {
   return {
-    id: row.id, items: row.items, amount: row.amount, currency: row.currency, status: row.status,
+    id: row.id, kind: row.kind, method: row.method, items: row.items, amount: row.amount, currency: row.currency, status: row.status,
     createdAt: row.createdAt.toISOString(),
     ...(row.reportedAt ? { reportedAt: row.reportedAt.toISOString() } : {}),
     ...(row.paidAt ? { paidAt: row.paidAt.toISOString() } : {}),
-    qpayAvailable: qpayConfigured() && row.status === 'pending_payment',
+    qpayAvailable: qpayConfigured(env) && row.status === 'pending_payment',
   };
 }
 
@@ -48,9 +48,9 @@ async function ownOrder(db, user, id) {
   return order;
 }
 
-export function createCheckoutRouter({ limit, ...options } = {}) {
+export function createCheckoutRouter({ limit, env = process.env, ...options } = {}) {
   const router = Router();
-  const auth = authMiddleware(options);
+  const auth = authMiddleware({ env, ...options });
   const limited = limit ?? ((req, res, next) => next());
 
   router.post('/orders', limited, auth, async (req, res) => {
@@ -62,7 +62,7 @@ export function createCheckoutRouter({ limit, ...options } = {}) {
       await tx.$executeRaw(Prisma.sql`SELECT pg_advisory_xact_lock(hashtext(${`course-order:${req.user.id}`}))`);
       const items = await priceItems(tx, ids);
       for (const id of ids) if (await hasActiveAccess(tx, req.user.id, id)) throw new HttpError(409, 'already_owned', 'Course is already owned', { courseIds: id });
-      const pending = await tx.courseOrder.findMany({ where: { userId: req.user.id, status: { in: PENDING_STATUSES } }, orderBy: { createdAt: 'desc' } });
+      const pending = await tx.courseOrder.findMany({ where: { userId: req.user.id, kind: 'course', status: { in: PENDING_STATUSES } }, orderBy: { createdAt: 'desc' } });
       const existing = pending.find((row) => sameCourses(row.items.map((item) => item.courseId), ids));
       if (existing) {
         if (existing.status === 'awaiting_quote' && quoted(items)) {
@@ -76,13 +76,13 @@ export function createCheckoutRouter({ limit, ...options } = {}) {
         id: newId('cord'), userId: req.user.id, items, amount: ready ? total(items) : null, currency: 'MNT', status: ready ? 'pending_payment' : 'awaiting_quote',
       } }), created: true };
     });
-    res.status(created ? 201 : 200).json(toOrder(order));
+    res.status(created ? 201 : 200).json(toOrder(order, env));
   });
 
   router.get('/me/orders', auth, async (req, res) => {
     res.set('Cache-Control', 'no-store');
-    const rows = await database().courseOrder.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' }, take: 100 });
-    res.json(rows.map(toOrder));
+    const rows = await database().courseOrder.findMany({ where: { userId: req.user.id, kind: 'course' }, orderBy: { createdAt: 'desc' }, take: 100 });
+    res.json(rows.map((row) => toOrder(row, env)));
   });
 
   router.post('/orders/:id/bank-transfer', limited, auth, async (req, res) => {
@@ -90,14 +90,8 @@ export function createCheckoutRouter({ limit, ...options } = {}) {
     const order = await ownOrder(db, req.user, req.params.id);
     if (!['pending_payment', 'pending_review'].includes(order.status)) throw new HttpError(409, 'payment_not_ready', 'Order cannot be paid');
     // Мэдэгдэл нь эрх олгохгүй: админ шилжүүлгийг шалгаад "Төлөгдсөн" дарна.
-    const updated = await db.courseOrder.update({ where: { id: order.id }, data: { status: 'pending_review', reportedAt: order.reportedAt ?? new Date() } });
-    res.json(toOrder(updated));
-  });
-
-  router.post('/orders/:id/qpay', limited, auth, async (req, res) => {
-    const order = await ownOrder(database(), req.user, req.params.id);
-    if (order.status !== 'pending_payment') throw new HttpError(409, 'payment_not_ready', 'Order cannot be paid');
-    throw new HttpError(503, 'qpay_unavailable', 'QPay is currently unavailable');
+    const updated = await db.courseOrder.update({ where: { id: order.id }, data: { status: 'pending_review', method: 'bank', reportedAt: order.reportedAt ?? new Date() } });
+    res.json(toOrder(updated, env));
   });
 
   router.get('/me/courses', auth, async (req, res) => {

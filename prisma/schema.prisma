@@ -72,7 +72,8 @@ model Enrollment {
   createdAt       DateTime  @default(now()) @map("created_at")
   payments        Payment[]
 
-  @@unique([courseId, emailNormalized])
+  // Unique биш: устгасан (soft delete) бүртгэлтэй хүн дахин бүртгүүлж чадна. Давхардлыг store шалгана.
+  @@index([courseId, emailNormalized])
   @@index([createdAt])
   @@map("enrollments")
 }
@@ -127,6 +128,16 @@ model Payment {
   @@map("payments")
 }
 
+// Хүсэлтийн тоо хязгаарлагч. security_limits migration-оор үүссэн.
+model RequestLimit {
+  id        String   @id
+  count     Int      @default(1)
+  expiresAt DateTime @map("expires_at")
+
+  @@index([expiresAt])
+  @@map("request_limits")
+}
+
 // Сайтын сагснаас үүссэн курсын захиалга (frontend docs/COURSE-CHECKOUT.md).
 // items: [{ courseId, title: {mn,en}, price }] — үнийг сервер DB-ээс тооцоолно.
 model CourseOrder {
@@ -136,6 +147,10 @@ model CourseOrder {
   amount      Int? // awaiting_quote үед null
   currency    String         @default("MNT")
   status      String // awaiting_quote | pending_payment | pending_review | paid | cancelled
+  kind        String         @default("course") // course | topup (хэтэвч цэнэглэлт, items хоосон)
+  method      String? // bank | qpay | wallet
+  qpayInvoiceId String?      @unique @map("qpay_invoice_id")
+  qpayInvoice Json?          @map("qpay_invoice")
   reportedAt  DateTime?      @map("reported_at") // хэрэглэгч "шилжүүлсэн" гэж мэдэгдсэн
   paidAt      DateTime?      @map("paid_at")
   paidBy      String?        @map("paid_by") // баталсан админы id
@@ -166,4 +181,27 @@ model CourseAccess {
 
   @@index([userId, courseId])
   @@map("course_access")
+}
+
+model Wallet {
+  userId    String   @id @map("user_id")
+  balance   Int      @default(0) // CHECK balance >= 0
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("wallets")
+}
+
+// Хэтэвчийн гүйлгээ бүр. Зөвхөн нэмэгдэнэ: UPDATE/DELETE-ийг trigger хориглодог.
+model WalletLedger {
+  id           String   @id // wtx_...
+  userId       String   @map("user_id")
+  amount       Int // + орлого, - зарлага
+  balanceAfter Int      @map("balance_after")
+  type         String // topup | purchase | refund
+  orderId      String   @map("order_id")
+  key          String   @unique // нэг захиалгыг давхар бичихээс хамгаална
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("wallet_ledger")
 }
