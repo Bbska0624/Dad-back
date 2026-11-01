@@ -44,12 +44,12 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
 
   const api = express.Router();
   api.get('/health', (req, res) => res.json({ status: 'ok' }));
-  api.use('/services', servicesRouter);
   // Анхны хүсэлтээр өгөгдлийн сангийн холболтыг бэлдэнэ (DATABASE_URL байвал Postgres, үгүй бол санах ой).
   api.use(async (req, res, next) => {
     await initStore(env);
     next();
   });
+  api.use('/services', servicesRouter);
   api.use('/courses', coursesRouter);
   api.use('/news', newsRouter);
   const session = { env, verifyUser, auth };

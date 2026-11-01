@@ -8,7 +8,13 @@ export function validateContent(type, input) {
   const fields = {};
   if (!localized(input.title, 250)) fields.title = 'Both languages required, max 250';
   if (!['published', 'draft', 'archived'].includes(input.publication)) fields.publication = 'Invalid publication';
-  if (type === 'courses') {
+  if (type === 'services') {
+    if (!localized(input.text)) fields.text = 'Both languages required';
+    if (!text(input.price, 150)) fields.price = 'Price range required, max 150';
+    if (!Array.isArray(input.features) || input.features.length > 30 || input.features.some((v) => !localized(v, 500))) fields.features = 'Max 30 bilingual features';
+    if (!Number.isSafeInteger(input.sortOrder) || input.sortOrder < 0) fields.sortOrder = 'Nonnegative integer required';
+    if (!text(input.number, 30)) fields.number = 'Display number required';
+  } else if (type === 'courses') {
     if (!['AI', 'Data', 'Code', 'Digital'].includes(input.category)) fields.category = 'Invalid category';
     if (!['open', 'waitlist', 'planned'].includes(input.status)) fields.status = 'Invalid enrollment status';
     if (!localized(input.description)) fields.description = 'Both languages required';
@@ -29,7 +35,7 @@ export function validateContent(type, input) {
     if (image.srcSet && (typeof image.srcSet !== 'string' || image.srcSet.split(',').some((v) => !/^(https?:\/\/|\/(?!\/))/.test(v.trim())))) fields.image = 'Invalid srcSet';
   }
   if (Object.keys(fields).length) throw validationError(fields);
-  const keys = type === 'courses'
+  const keys = type === 'services' ? ['number', 'title', 'text', 'price', 'features', 'image', 'sortOrder'] : type === 'courses'
     ? ['category', 'status', 'price', 'title', 'description', 'image', 'featured', 'duration', 'level']
     : ['number', 'category', 'title', 'summary', 'body', 'details', 'coverImage', 'gallery', 'publishedAt', 'isSample'];
   return Object.fromEntries([...keys, 'publication'].filter((key) => input[key] !== undefined).map((key) => [key, input[key]]));

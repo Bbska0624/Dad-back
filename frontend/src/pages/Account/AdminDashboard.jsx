@@ -1,3 +1,4 @@
+import AdminServices from './AdminServices';
 import { useId, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -16,6 +17,7 @@ import WorkspaceHeading from './WorkspaceHeading';
 import './admin.css';
 
 const ADMIN_TABS = [
+  { id: 'services', mn: 'Үйлчилгээ', en: 'Services' },
   { id: 'overview', mn: 'Тойм', en: 'Overview' },
   { id: 'courses', mn: 'Сургалтууд', en: 'Courses' },
   { id: 'course-orders', mn: 'Сургалтын төлбөр', en: 'Course payments' },
@@ -65,6 +67,7 @@ function AdminWorkspace() {
   const [days, setDays] = useState(30);
   const [activeTab, setActiveTab] = useState('overview');
   const courseApi = useApi((signal) => getAdminContent('courses', { signal }), []);
+  const servicesApi = useApi((signal) => getAdminContent('services', { signal }), []);
   const newsApi = useApi((signal) => getAdminContent('news', { signal }), []);
   const activityApi = useApi((signal) => getAdminActivity({ signal }), []);
   const courses = (courseApi.data || []).filter((course) => !course.deletedAt);
@@ -139,6 +142,7 @@ function AdminWorkspace() {
       <section id="admin-orders" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-orders" tabIndex={0} hidden={activeTab !== 'orders'}>
         <AdminRecordsManager type="order" days={days} />
       </section>
+      <section id="admin-services" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-services" hidden={activeTab !== 'services'}><AdminServices api={servicesApi}/></section>
       <section id="admin-news" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-news" tabIndex={0} hidden={activeTab !== 'news'}>
         <AdminContentManager type="news" api={newsApi} />
       </section>

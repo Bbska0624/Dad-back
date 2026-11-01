@@ -205,3 +205,20 @@ model WalletLedger {
   @@index([userId, createdAt])
   @@map("wallet_ledger")
 }
+
+model Service {
+  id String @id
+  number String @default("01 /")
+  title Json
+  text Json
+  price String
+  features Json
+  image Json?
+  sortOrder Int @default(0) @map("sort_order")
+  publication String @default("published")
+  deletedAt DateTime? @map("deleted_at")
+  managed Boolean @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("services")
+}

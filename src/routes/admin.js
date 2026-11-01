@@ -13,8 +13,8 @@ export function database() {
   return prisma;
 }
 const modelName = (type) => {
-  if (!['courses', 'news'].includes(type)) throw notFound('Content type');
-  return type === 'courses' ? 'course' : 'news';
+  if (!['courses', 'news', 'services'].includes(type)) throw notFound('Content type');
+  return ({ courses: 'course', news: 'news', services: 'service' })[type];
 };
 const jsonFields = ['image', 'coverImage', 'gallery', 'body', 'details', 'duration', 'level'];
 const toData = (item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key,
