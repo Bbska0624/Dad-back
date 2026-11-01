@@ -1,0 +1,5 @@
+CREATE TABLE "site_sections" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "content" JSONB NOT NULL,
+  "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

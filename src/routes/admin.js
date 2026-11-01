@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { readAbout, validateAbout } from '../services/about.js';
 import { Prisma } from '@prisma/client';
 import { getStore, newId } from '../store.js';
 import { HttpError, notFound, validationError } from '../errors.js';
@@ -24,6 +25,15 @@ export function createAdminRouter(options = {}) {
   const router = Router();
   router.use(authMiddleware(options), requireAdmin);
   router.use(rateLimit({ windowMs: 60000, max: 120 }));
+  router.get('/site/about', async (_req, res) => res.json(await readAbout(database())));
+  router.put('/site/about', async (req, res) => {
+    const content = validateAbout(req.body);
+    await database().$transaction(async (tx) => {
+      await tx.siteSection.upsert({ where: { id: 'about' }, create: { id: 'about', content }, update: { content } });
+      await tx.activity.create({ data: { id: newId('act'), actorId: req.user.id, action: 'update', type: 'about', title: content.heading } });
+    });
+    res.json(content);
+  });
   router.post('/images', async (req, res) => res.status(201).json(await uploadImage(req.body?.dataUrl, options.env)));
   router.get('/activity', async (req, res) => res.json(await database().activity.findMany({ orderBy: { at: 'desc' }, take: 150 })));
   router.get('/users', async (req, res) => res.json(await database().profile.findMany({ orderBy: { createdAt: 'desc' } })));

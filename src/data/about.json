@@ -1,0 +1,151 @@
+{
+  "visible": true,
+  "heading": {
+    "mn": "БИДНИЙ ТУХАЙ",
+    "en": "OUR STORY"
+  },
+  "photo": {
+    "src": "/assets/about/director-enkhtuya.jpg",
+    "width": 600,
+    "height": 697
+  },
+  "name": {
+    "mn": "Цогтбаатарын Энхтуяа",
+    "en": "Enkhtuya Tsogtbaatar"
+  },
+  "role": {
+    "mn": "Үүсгэн байгуулагч, гүйцэтгэх захирал",
+    "en": "Founder & CEO"
+  },
+  "bio": {
+    "mn": "Гүйцэтгэх захирал Ц.Энхтуяа нь компьютерийн ухаан, өгөгдлийн шинжилгээ, хиймэл оюуны чиглэлээр 19 жил багшилж, судалгаа хийсэн туршлагатай. 2010 оноос Монгол Улсын Их Сургуульд багшилж байгаа бөгөөд Тайваньд гүн сургалтад суурилсан биометрик танилт, сансрын ионограмм боловсруулалтын олон улсын хамтарсан төслүүдэд ажилласан.",
+    "en": "CEO, Enkhtuya Tsogtbaatar, has spent 19 years teaching and researching computer science, data analysis and artificial intelligence. She has taught at the National University of Mongolia since 2010, and in Taiwan she worked on international joint projects in deep-learning-based biometrics and ionogram processing for space science."
+  },
+  "stats": [
+    {
+      "value": "19",
+      "label": {
+        "mn": "жил багшилсан",
+        "en": "years teaching"
+      }
+    },
+    {
+      "value": "28",
+      "label": {
+        "mn": "хичээл заах чадвартай",
+        "en": "courses she can teach"
+      }
+    },
+    {
+      "value": "20+",
+      "label": {
+        "mn": "эрдэм шинжилгээний бүтээл",
+        "en": "research publications"
+      }
+    }
+  ],
+  "languages": [
+    {
+      "mn": "Орос",
+      "en": "Russian"
+    },
+    {
+      "mn": "Англи",
+      "en": "English"
+    },
+    {
+      "mn": "Хятад",
+      "en": "Chinese"
+    },
+    {
+      "mn": "Солонгос",
+      "en": "Korean"
+    }
+  ],
+  "facts": [
+    {
+      "title": {
+        "mn": "Боловсрол",
+        "en": "Education"
+      },
+      "items": [
+        {
+          "mn": "Компьютерийн ухаан, докторантур: Тайваны Үндэсний Их Сургууль, 100% тэтгэлэгтэй, 2018–2022",
+          "en": "Doctoral studies in Computer Science and Information Engineering, Taiwan, full scholarship, 2018–2022"
+        },
+        {
+          "mn": "Мэдээллийн удирдлагын магистр: Квангвүүн Их Сургууль, Хүрээ МХТДС, 2003–2007",
+          "en": "Master's in Information Management:  Kwangwoon University (Korea) and Huree University of ICT, 2003–2007"
+        },
+        {
+          "mn": "Физикч, компьютерийн технологич:  Улсын Багшийн Их Сургууль, 1999–2003",
+          "en": "Bachelor's in Physics and Computer Technology:  Mongolian State University of Education, 1999–2003"
+        }
+      ]
+    },
+    {
+      "title": {
+        "mn": "Ажлын туршлага",
+        "en": "Experience"
+      },
+      "items": [
+        {
+          "mn": "Magic Code AI ХХК-ийн үүсгэн байгуулагч, гүйцэтгэх захирал, 2025 оноос одоог хүртэл",
+          "en": "Founder and CEO of Magic Code AI LLC, 2025–present"
+        },
+        {
+          "mn": "Монгол Улсын Их Сургуулийн багш, 2010 оноос одоог хүртэл",
+          "en": "Lecturer at the National University of Mongolia, 2010–present"
+        },
+        {
+          "mn": "Худалдаа Үйлдвэрлэлийн Дээд Сургуулийн компьютерийн ухааны багш, 2007–2010",
+          "en": "Lecturer in Computer Science at the College of Commerce and Industry, 2007–2010"
+        }
+      ]
+    },
+    {
+      "title": {
+        "mn": "Мэргэшил",
+        "en": "Expertise"
+      },
+      "items": [
+        {
+          "mn": "Хиймэл оюун, машин сургалт, гүн сургалт",
+          "en": "Artificial intelligence, machine learning, deep learning"
+        },
+        {
+          "mn": "Өгөгдлийн шинжилгээ ба дүрслэл, Python, Business Intelligence, Tableau",
+          "en": "Data Analysis and Visualization, Python, Business Intelligence, Tableau"
+        },
+        {
+          "mn": "Мэдээллийн удирдлага, мэдээллийн аюулгүй байдал, мэргэшсэн зөвлөх",
+          "en": "Information management, information security, certified consultant"
+        }
+      ]
+    },
+    {
+      "title": {
+        "mn": "Шагнал, амжилт",
+        "en": "Recognition"
+      },
+      "items": [
+        {
+          "mn": "Олон улсын сэтгүүлд багаараа 5 өгүүлэл хэвлүүлсэн",
+          "en": "Co-authored 5 papers in international journals"
+        },
+        {
+          "mn": "AOGS 2021 олон улсын чуулганы хиймэл оюуны салбар хуралдаанд 4-р байр",
+          "en": "4th place, AI session of the AOGS 2021 international conference"
+        },
+        {
+          "mn": "МУИС-ийн Хүндэтгэлийн жуух, 2015",
+          "en": "NUM Certificate of Honour, 2015"
+        },
+        {
+          "mn": "180 гишүүнтэй “Magic Code” эрдэм шинжилгээний клубыг үүсгэн байгуулсан, 2008",
+          "en": "Founded the “Magic Code” research club, 180 members, 2008"
+        }
+      ]
+    }
+  ]
+}

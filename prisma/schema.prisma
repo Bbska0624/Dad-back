@@ -5,6 +5,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model SiteSection {
+  id String @id
+  content Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("site_sections")
+}
+
 datasource db {
   provider = "postgresql"
   url       = env("DATABASE_URL") // Vercel: Supabase pooler (6543, ?pgbouncer=true)

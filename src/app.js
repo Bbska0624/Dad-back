@@ -1,4 +1,6 @@
 import express from 'express';
+import { readAbout } from './services/about.js';
+import { getStore } from './store.js';
 import cors from 'cors';
 import { coursesRouter } from './routes/courses.js';
 import { servicesRouter } from './routes/services.js';
@@ -50,6 +52,10 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
     next();
   });
   api.use('/services', servicesRouter);
+  api.get('/site/about', async (_req, res) => {
+    const content = await readAbout(getStore().prisma);
+    res.set('Cache-Control', 'no-store').json(content.visible ? content : { visible: false });
+  });
   api.use('/courses', coursesRouter);
   api.use('/news', newsRouter);
   const session = { env, verifyUser, auth };

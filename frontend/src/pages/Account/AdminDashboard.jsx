@@ -1,4 +1,5 @@
 import AdminServices from './AdminServices';
+import AdminAbout from './AdminAbout';
 import { useId, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -17,6 +18,7 @@ import WorkspaceHeading from './WorkspaceHeading';
 import './admin.css';
 
 const ADMIN_TABS = [
+  { id: 'about', mn: 'Бидний тухай', en: 'About' },
   { id: 'services', mn: 'Үйлчилгээ', en: 'Services' },
   { id: 'overview', mn: 'Тойм', en: 'Overview' },
   { id: 'courses', mn: 'Сургалтууд', en: 'Courses' },
@@ -133,6 +135,7 @@ function AdminWorkspace() {
       <section id="admin-courses" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-courses" tabIndex={0} hidden={activeTab !== 'courses'}>
         <AdminContentManager type="courses" api={courseApi} />
       </section>
+      <section id="admin-about" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-about" tabIndex={0} hidden={activeTab !== 'about'}>{activeTab === 'about' && <AdminAbout />}</section>
       <section id="admin-course-orders" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-course-orders" tabIndex={0} hidden={activeTab !== 'course-orders'}>
         {activeTab === 'course-orders' && <AdminCourseOrders />}
       </section>

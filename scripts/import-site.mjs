@@ -54,6 +54,11 @@ async function media(value) {
 }
 const store = createPrismaStore();
 try {
+  const about = await store.prisma.siteSection.findUnique({ where: { id: 'about' } });
+  if (!about) {
+    const content = await media(await load('about'));
+    await store.prisma.siteSection.upsert({ where: { id: 'about' }, create: { id: 'about', content }, update: {} });
+  }
   for (const course of await load('courses')) {
     const existing = await store.prisma.course.findUnique({ where: { id: course.id } });
     if (existing?.managed) continue;
