@@ -71,7 +71,8 @@ export function createAuthRouter({ env = process.env, verifyUser, auth, limit } 
   router.get('/me', async (req, res) => {
     res.set('Cache-Control', 'no-store');
     const user = await sessionUser(req, res, { env, verifyUser, auth });
-    if (!user) throw new HttpError(401, 'unauthorized', 'Login required');
+    // Session discovery is public: being signed out is a normal result.
+    if (!user) return res.json(null);
     res.json(publicProfile(await syncProfile(user)));
   });
 

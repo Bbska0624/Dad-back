@@ -34,7 +34,7 @@ POST /api/enrollments: сургалтын бүртгэл; authenticated бол u
 
 - POST /api/auth/register {name, email, password}: имэйл баталгаажуулалт асаалттай бол 202 {confirmationRequired, email}; унтраалттай бол 201 profile + cookie. Бүртгэлтэй имэйл бол 409 duplicate.
 - POST /api/auth/login {email, password}: profile + cookie. Буруу бол 401 invalid_credentials, баталгаажаагүй бол 403 email_not_confirmed.
-- GET /api/auth/me: {id, name, email, role} эсвэл 401. Access токены хугацаа дуусвал refresh токеноор автоматаар сэргээнэ.
+- GET /api/auth/me: 200 {id, name, email, role} эсвэл нэвтрээгүй үед 200 null (Cache-Control: no-store). Access токены хугацаа дуусвал refresh токеноор автоматаар сэргээнэ. Хамгаалагдсан account/admin endpoint-ууд нэвтрээгүй үед 401 хэвээр буцаана.
 - POST /api/auth/logout: 204, cookie устгана.
 - GET /api/auth/confirm?token_hash=&type=email: имэйл дэх линк. Баталгаажуулаад нэвтрүүлж /account руу шилжүүлнэ.
 - POST /api/orders {courseIds}; GET /api/me/orders; POST /api/orders/:id/bank-transfer; POST /api/orders/:id/qpay (QPay холбогдох хүртэл 503 qpay_unavailable).

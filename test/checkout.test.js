@@ -122,7 +122,7 @@ test('auth validates input, maps Supabase errors and rejects untrusted origins',
   await withServer(fake, async (base) => {
     const b = browser(base);
     assert.equal((await b.call('POST', '/auth/register', { name: '', email: 'bad', password: 'short' })).status, 400);
-    assert.equal((await b.call('GET', '/auth/me')).status, 401);
+    assert.equal((await b.call('GET', '/auth/me')).status, 200);
     assert.equal((await b.call('POST', '/auth/login', { email: 'nobody@example.com', password: 'whatever1' })).body.error.code, 'invalid_credentials');
     // Имэйл баталгаажуулалт асаалттай: session өгөхгүй, cookie тавихгүй.
     const reg = await b.call('POST', '/auth/register', { name: 'Сараа', email: 'Saraa@Example.com', password: 'password123' });
@@ -187,7 +187,7 @@ test('DB: confirm email → logged in → me/refresh → logout', needsDb, async
     assert.ok(refreshed.cookies.some((line) => line.startsWith('mci_at=')));
     assert.equal((await b.call('POST', '/auth/logout')).status, 204);
     assert.equal(b.jar.size, 0);
-    assert.equal((await b.call('GET', '/auth/me')).status, 401);
+    assert.equal((await b.call('GET', '/auth/me')).status, 200);
   });
 });
 
