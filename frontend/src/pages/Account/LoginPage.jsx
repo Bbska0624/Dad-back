@@ -52,7 +52,7 @@ export default function LoginPage() {
     <div className="login-intro">
       <div className="eyebrow">MAGIC CODE · ADMIN</div>
       <h1>{t('Үргэлжлүүлэн', 'Manage')}<br /><em>{t('бүтээцгээе.', 'your workspace.')}</em></h1>
-      <p>{t('Хичээлээ үзэж, шинэ зүйл суралцаж, өөрийн ахиц бүрийг бүтээх орон зай.', 'Manage courses, enrollments, orders and news in one place.')}</p>
+      <p>{t('Сургалт, төлбөр, бүртгэл болон мэдээгээ нэг дороос удирдаарай.', 'Manage courses, enrollments, orders and news in one place.')}</p>
     </div>
     <div className="account-card login-card">
       <div className="eyebrow">{t('ЗӨВХӨН АДМИН', 'ADMIN ACCESS')}</div>

@@ -42,3 +42,5 @@ header #nav .account-link.is-active{background:var(--nav-control,var(--soft));co
   .workspace-heading p{font-size:13px}
   .workspace-heading-actions{flex-wrap:wrap;justify-content:flex-end;max-width:110px}
 }
+/* Keep login-field focus within the existing border. */
+.login-card input:focus-visible{outline:none;border-color:var(--muted);box-shadow:inset 0 0 0 1px var(--muted)}

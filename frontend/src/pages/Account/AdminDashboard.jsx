@@ -18,17 +18,19 @@ import WorkspaceHeading from './WorkspaceHeading';
 import './admin.css';
 
 const ADMIN_TABS = [
-  { id: 'about', mn: 'Бидний тухай', en: 'About' },
-  { id: 'services', mn: 'Үйлчилгээ', en: 'Services' },
-  { id: 'overview', mn: 'Тойм', en: 'Overview' },
-  { id: 'courses', mn: 'Сургалтууд', en: 'Courses' },
+  { id: 'overview', mn: 'Ерөнхий тойм', en: 'Overview' },
   { id: 'course-orders', mn: 'Сургалтын төлбөр', en: 'Course payments' },
   { id: 'enrollments', mn: 'Элсэлтүүд', en: 'Enrollments' },
   { id: 'orders', mn: 'Захиалгууд', en: 'Orders' },
-  { id: 'news', mn: 'Мэдээлэл', en: 'Content' },
+  { id: 'courses', mn: 'Сургалтууд', en: 'Courses' },
+  { id: 'services', mn: 'Үйлчилгээ', en: 'Services' },
+  { id: 'news', mn: 'Мэдээ, нийтлэл', en: 'News & articles' },
+  { id: 'about', mn: 'Бидний тухай', en: 'About' },
   { id: 'users', mn: 'Хэрэглэгчид', en: 'Users' },
   { id: 'activity', mn: 'Үйлдлийн түүх', en: 'Activity' },
 ];
+
+const TAB_HINTS = {"overview":["Нийт мэдээллээ харах","See your summary"],"course-orders":["Төлбөр шалгаж, батлах","Review and confirm payments"],"enrollments":["Бүртгүүлсэн хүмүүсийг харах","See course registrations"],"orders":["Ирсэн захиалгаа хянах","Review incoming orders"],"courses":["Сургалт нэмэх, засах","Add and edit courses"],"services":["Үйлчилгээний мэдээлэл засах","Edit your services"],"news":["Мэдээ нэмэх, нийтлэх","Write and publish news"],"about":["Байгууллагын мэдээлэл засах","Update company information"],"users":["Хэрэглэгчийн мэдээлэл харах","Find account information"],"activity":["Өмнөх өөрчлөлтүүдийг харах","See previous changes"]};
 
 function EnrollmentChart({ timeline, locale, t }) {
   const gradient = useId();
@@ -93,28 +95,28 @@ function AdminWorkspace() {
         description={t('Сургалт, элсэлт, мэдээллээ нэг дороос хянаарай.', 'Monitor courses, enrollments and content in one place.')}
         onLogout={logout}
       />
-      <div className="admin-toolbar">
-        <div className="admin-sections" role="tablist" aria-label={t('Удирдлагын хэсгүүд', 'Dashboard sections')}>
+      <div className="admin-workspace-layout"><aside className="admin-toolbar"><p className="admin-menu-label">{t('УДИРДЛАГЫН ЦЭС', 'WORKSPACE MENU')}</p>
+        <div className="admin-sections" role="tablist" aria-orientation="vertical" aria-label={t('Удирдлагын хэсгүүд', 'Dashboard sections')}>
           {ADMIN_TABS.map((tab, index) => <button key={tab.id} id={`admin-tab-${tab.id}`} type="button" role="tab" aria-selected={activeTab === tab.id} aria-controls={`admin-${tab.id}`} tabIndex={activeTab === tab.id ? 0 : -1} onClick={() => setActiveTab(tab.id)} onKeyDown={(event) => {
             let next;
-            if (event.key === 'ArrowRight') next = (index + 1) % ADMIN_TABS.length;
-            else if (event.key === 'ArrowLeft') next = (index + ADMIN_TABS.length - 1) % ADMIN_TABS.length;
+            if (['ArrowRight', 'ArrowDown'].includes(event.key)) next = (index + 1) % ADMIN_TABS.length;
+            else if (['ArrowLeft', 'ArrowUp'].includes(event.key)) next = (index + ADMIN_TABS.length - 1) % ADMIN_TABS.length;
             else if (event.key === 'Home') next = 0;
             else if (event.key === 'End') next = ADMIN_TABS.length - 1;
             else return;
             event.preventDefault();
             setActiveTab(ADMIN_TABS[next].id);
             event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next].focus({ preventScroll: true });
-          }}>{t(tab.mn, tab.en)}</button>)}
+          }}><span>{t(tab.mn, tab.en)}</span><small>{t(...TAB_HINTS[tab.id])}</small></button>)}
         </div>
-        <label className="admin-period">{t('Хугацаа', 'Period')}<select value={days} onChange={(event) => setDays(Number(event.target.value))}>
-          {[7, 30, 90].map((value) => <option value={value} key={value}>{t(`Сүүлийн ${value} хоног`, `Last ${value} days`)}</option>)}
-        </select></label>
-      </div>
-      <div className="admin-demo-note"><span className="admin-note-dot" /><p>{t('Бодит backend-д холбогдсон удирдлагын самбар.', 'Admin dashboard connected to the live backend.')}</p></div>
+      </aside>
+      <div className="admin-workspace-content">
+        <div className="admin-section-intro"><div><p className="admin-breadcrumb">{t('Удирдлагын самбар', 'Admin dashboard')}</p><h2>{t(ADMIN_TABS.find(tab => tab.id === activeTab).mn, ADMIN_TABS.find(tab => tab.id === activeTab).en)}</h2><p>{t(...TAB_HINTS[activeTab])}</p></div>
+        {['overview', 'enrollments', 'orders'].includes(activeTab) && <label className="admin-period">{t('Харах хугацаа', 'Show records from')}<select value={days} onChange={event => setDays(Number(event.target.value))}>{[7, 30, 90].map(value => <option value={value} key={value}>{t(`Сүүлийн ${value} хоног`, `Last ${value} days`)}</option>)}</select></label>}
+        </div>
 
       <section id="admin-overview" className="admin-overview-section" role="tabpanel" aria-labelledby="admin-tab-overview" tabIndex={0} hidden={activeTab !== 'overview'}>
-        <div className="admin-metrics">{metrics.map((metric, index) => <div className="account-card admin-metric" key={metric.icon}>
+        <div className="admin-quick-start"><div><h3>{t('Та юу хийх вэ?', 'What would you like to do?')}</h3><p>{t('Хэрэгтэй хэсэгтээ шууд очоорой.', 'Choose a task to get started.')}</p></div><div className="admin-quick-actions">{['course-orders', 'courses', 'news'].map(id => <button key={id} type="button" onClick={() => { setActiveTab(id); document.getElementById(`admin-tab-${id}`)?.focus(); }}><span>{t(...({ 'course-orders': ['Төлбөр шалгах', 'Review payments'], courses: ['Сургалт удирдах', 'Manage courses'], news: ['Мэдээ удирдах', 'Manage news'] }[id]))}</span><span aria-hidden="true">→</span></button>)}</div></div><div className="admin-metrics">{metrics.map((metric, index) => <div className="account-card admin-metric" key={metric.icon}>
           <div className="admin-metric-top"><span>{metric.label}</span><span className={`admin-metric-icon admin-metric-icon--${index}`} aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{index === 0 ? <><path d="M4 5h6a3 3 0 0 1 3 3v12a4 4 0 0 0-4-2H4zM20 5h-4a3 3 0 0 0-3 3M20 5v13h-3" /></> : index === 1 ? <><rect x="5" y="5" width="14" height="16" rx="2" /><path d="M9 3v4m6-4v4M9 12h6m-6 4h4" /></> : index === 2 ? <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2m1-15a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2" /></> : <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}</svg></span></div>
           <strong>{metric.value}</strong><small>{metric.detail}</small>
         </div>)}</div>
@@ -158,6 +160,7 @@ function AdminWorkspace() {
         <ul className="admin-activity-list">{activityApi.data?.map((entry) => <li key={entry.id}><div><strong>{textOf(entry.title, lang)}</strong><span>{({ create: t('Нэмсэн', 'Created'), update: t('Зассан', 'Edited'), delete: t('Устгасан', 'Deleted'), restore: t('Сэргээсэн', 'Restored'), published: t('Нийтэлсэн', 'Published'), paid: t('Төлбөр баталсан', 'Payment confirmed'), cancelled: t('Захиалга цуцалсан', 'Order cancelled'), draft: t('Ноорог болгосон', 'Moved to draft'), archived: t('Архивласан', 'Archived') })[entry.action]}</span></div><time dateTime={entry.at}>{new Date(entry.at).toLocaleString(locale)}</time></li>)}</ul>
         {activityApi.data?.length === 0 && <p className="admin-empty-inline">{t('Одоогоор өөрчлөлт хийгдээгүй байна.', 'No changes yet.')}</p>}
       </section>
+      </div></div>
     </main>
   </>;
 }
