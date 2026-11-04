@@ -4,7 +4,6 @@ import { newId } from '../store.js';
 import { moveWallet } from './wallet.js';
 
 export const COURSE_ACCESS_MONTHS = 3;
-export const TEMPORARY_FREE_COURSE = 'data-analysis'; // Power BI: хэрэглэгч бүрт нэг удаа 3 сарын түр эрх
 export const PENDING_STATUSES = ['awaiting_quote', 'pending_payment', 'pending_review'];
 export const PAYABLE_STATUSES = ['pending_payment', 'pending_review'];
 
@@ -23,21 +22,7 @@ export function accessExpiresAt(activatedAt) {
   return result;
 }
 
-const activeWhere = (userId, now) => ({ userId, revokedAt: null, activatedAt: { lte: now }, expiresAt: { gt: now } });
-
-/** Power BI-ийн түр эрхийг нэг л удаа үүсгэнэ (давхар хүсэлтэд grantKey unique хамгаална). */
-export async function ensureTemporaryAccess(db, userId, now = new Date()) {
-  const grantKey = `waived:${TEMPORARY_FREE_COURSE}:${userId}`;
-  if (await db.courseAccess.findUnique({ where: { grantKey } })) return;
-  try {
-    await db.courseAccess.create({ data: {
-      id: newId('acc'), userId, courseId: TEMPORARY_FREE_COURSE, paymentStatus: 'waived', accessType: 'temporary',
-      grantKey, activatedAt: now, expiresAt: accessExpiresAt(now),
-    } });
-  } catch (error) {
-    if (error?.code !== 'P2002') throw error; // зэрэг ирсэн хүсэлт аль хэдийн үүсгэсэн
-  }
-}
+const activeWhere = (userId, now) => ({ userId, paymentStatus: 'paid', revokedAt: null, activatedAt: { lte: now }, expiresAt: { gt: now } });
 
 /** Идэвхтэй эрхүүд, курс бүрт хамгийн сүүлд дуусахыг нь. */
 export async function activeAccess(db, userId, now = new Date()) {

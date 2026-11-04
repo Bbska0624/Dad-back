@@ -10,7 +10,7 @@ import { newId } from '../store.js';
 import { visibleContent } from '../services/content.js';
 import { qpayConfigured } from '../services/qpay.js';
 import { bankAccounts } from '../services/banks.js';
-import { activeAccess, courseLessons, ensureTemporaryAccess, hasActiveAccess, PENDING_STATUSES, TEMPORARY_FREE_COURSE } from '../services/courseAccess.js';
+import { activeAccess, courseLessons, hasActiveAccess, PENDING_STATUSES } from '../services/courseAccess.js';
 
 const MAX_ITEMS = 20;
 
@@ -100,7 +100,6 @@ export function createCheckoutRouter({ limit, env = process.env, ...options } = 
   router.get('/me/courses', auth, async (req, res) => {
     res.set('Cache-Control', 'no-store');
     const db = database();
-    await ensureTemporaryAccess(db, req.user.id);
     res.json(await activeAccess(db, req.user.id));
   });
 
@@ -109,7 +108,6 @@ export function createCheckoutRouter({ limit, env = process.env, ...options } = 
     const lessons = courseLessons(req.params.courseId);
     if (!lessons) throw notFound('Course');
     const db = database();
-    if (req.params.courseId === TEMPORARY_FREE_COURSE) await ensureTemporaryAccess(db, req.user.id);
     if (!await hasActiveAccess(db, req.user.id, req.params.courseId)) throw new HttpError(403, 'payment_required', 'Payment confirmation is required');
     res.json({ lessons });
   });

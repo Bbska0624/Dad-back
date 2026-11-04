@@ -206,13 +206,9 @@ test('DB: order → bank transfer → admin marks paid → lessons unlocked for 
     assert.equal((await browser(base).call('POST', '/orders', { courseIds: ['sql-databases'] })).status, 401);
     assert.equal((await student.call('POST', '/orders', { courseIds: ['no-such-course'] })).status, 400);
 
-    // Power BI-ийн түр эрх нэг удаа үүснэ.
-    const courses = await student.call('GET', '/me/courses');
-    assert.equal(courses.body.length, 1);
-    assert.deepEqual({ ...courses.body[0], activatedAt: undefined, expiresAt: undefined }, { courseId: 'data-analysis', status: 'active', paymentStatus: 'waived', accessType: 'temporary', activatedAt: undefined, expiresAt: undefined });
-    assert.deepEqual((await student.call('GET', '/me/courses')).body, courses.body);
-    assert.equal((await student.call('GET', '/me/courses/data-analysis/lessons')).body.lessons.length, 4);
-    assert.equal((await student.call('POST', '/orders', { courseIds: ['data-analysis'] })).body.error.code, 'already_owned');
+    // Unpaid users have no access, including Power BI.
+    assert.deepEqual((await student.call('GET', '/me/courses')).body, []);
+    assert.equal((await student.call('GET', '/me/courses/data-analysis/lessons')).status, 403);
 
     // Үнийг сервер тооцоолно, ижил захиалга дахин үүсэхгүй.
     const created = await student.call('POST', '/orders', { courseIds: ['sql-databases', 'web-development'], userId: 'someone-else', amount: 1 });
@@ -265,7 +261,7 @@ test('DB: order → bank transfer → admin marks paid → lessons unlocked for 
     const sql = access.find((a) => a.courseId === 'sql-databases');
     assert.equal(sql.paymentStatus, 'paid');
     assert.equal(sql.expiresAt, accessExpiresAt(sql.activatedAt).toISOString());
-    assert.equal(access.length, 3);
+    assert.equal(access.length, 2);
     assert.deepEqual((await student.call('GET', '/me/courses/sql-databases/lessons')).body.lessons[0], { id: 'HXV3zeQKqGY', mn: 'SQL ба өгөгдлийн сангийн суурь', en: 'SQL & database fundamentals', creator: 'freeCodeCamp.org' });
     assert.equal((await other.call('GET', '/me/courses/sql-databases/lessons')).status, 403);
     assert.equal((await student.call('POST', '/orders', { courseIds: ['sql-databases'] })).body.error.code, 'already_owned');
