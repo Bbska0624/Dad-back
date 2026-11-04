@@ -126,12 +126,14 @@ test('банкны төлбөр → 201, дансны заавар, reference = 
   });
 });
 
-test('банкны мэдээлэл тохируулаагүй бол instructions: null', async () => {
+test('bank payments include both default receiving accounts without environment configuration', async () => {
   await withServer({ env: {} }, async (base) => {
     const enr = (await send(base, 'POST', '/enrollments', { courseId: 'data-analysis', ...person })).body;
     const { res, body } = await send(base, 'POST', '/payments', { enrollmentId: enr.id, method: 'bank' });
     assert.equal(res.status, 201);
-    assert.equal(body.instructions, null);
+    assert.equal(body.instructions.reference, enr.id);
+    assert.deepEqual(body.instructions.banks.map((bank) => bank.accountNumber), ['MN790005005031346583', 'MN570004004004201904']);
+    assert.equal(body.instructions.banks[1].accountName, 'МЭЖИК КОД ЭЙ АЙ ХХК');
   });
 });
 

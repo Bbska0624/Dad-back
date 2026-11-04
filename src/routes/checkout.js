@@ -9,6 +9,7 @@ import { HttpError, notFound, validationError } from '../errors.js';
 import { newId } from '../store.js';
 import { visibleContent } from '../services/content.js';
 import { qpayConfigured } from '../services/qpay.js';
+import { bankAccounts } from '../services/banks.js';
 import { activeAccess, courseLessons, ensureTemporaryAccess, hasActiveAccess, PENDING_STATUSES, TEMPORARY_FREE_COURSE } from '../services/courseAccess.js';
 
 const MAX_ITEMS = 20;
@@ -20,6 +21,7 @@ export function toOrder(row, env = process.env) {
     ...(row.reportedAt ? { reportedAt: row.reportedAt.toISOString() } : {}),
     ...(row.paidAt ? { paidAt: row.paidAt.toISOString() } : {}),
     qpayAvailable: qpayConfigured(env) && row.status === 'pending_payment',
+    banks: bankAccounts(env),
   };
 }
 
@@ -90,7 +92,8 @@ export function createCheckoutRouter({ limit, env = process.env, ...options } = 
     const order = await ownOrder(db, req.user, req.params.id);
     if (!['pending_payment', 'pending_review'].includes(order.status)) throw new HttpError(409, 'payment_not_ready', 'Order cannot be paid');
     // Мэдэгдэл нь эрх олгохгүй: админ шилжүүлгийг шалгаад "Төлөгдсөн" дарна.
-    const updated = await db.courseOrder.update({ where: { id: order.id }, data: { status: 'pending_review', method: 'bank', reportedAt: order.reportedAt ?? new Date() } });
+    await db.courseOrder.updateMany({ where: { id: order.id, status: 'pending_payment' }, data: { status: 'pending_review', method: 'bank', reportedAt: order.reportedAt ?? new Date() } });
+    const updated = await db.courseOrder.findUnique({ where: { id: order.id } });
     res.json(toOrder(updated, env));
   });
 

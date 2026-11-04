@@ -54,11 +54,17 @@ Supabase Dashboard тохиргоо (нэг удаа):
 2. Authentication → URL Configuration: **Site URL** = `https://www.mci.mn`.
 3. Authentication → Emails → **Confirm signup** загварын линкийг дараахаар солино:
    `<a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=email">Баталгаажуулах</a>`
-4. Supabase-ийн үнэгүй имэйл илгээлт цагт цөөн имэйлээр хязгаарлагдана. Хэрэглэгч олширвол Authentication → Emails → SMTP Settings-д тусдаа имэйл сервис холбоно.
+4. Supabase-ийн үндсэн имэйл илгээгч нь зөвхөн туршилтад зориулагдсан бөгөөд төслийн багийн хаягуудад илгээнэ. Нийтийн бүртгэлд Authentication → Emails → SMTP Settings-д тусдаа SMTP сервис холбоно.
 
 Backend env: `SITE_URL` (заавал биш, анхдагч `https://www.mci.mn`).
 
 ## Хамгаалалт
+
+### Admin password recovery
+
+The admin login links to `/forgot-password`. It uses Supabase `resetPasswordForEmail`; `/reset-password` lets the account owner set and confirm a new password through `updateUser`, then signs out locally.
+
+In Authentication → URL Configuration → Redirect URLs, allow `http://localhost:5180/reset-password` for this local preview and the exact production admin origin followed by `/reset-password` for deployment. Keep the Reset Password email template's `{{ .ConfirmationURL }}` link so Supabase validates the recovery token before redirecting. Configure custom SMTP for delivery to public users; the default sender is restricted to testing. Do not include recovery tokens in logs or support messages.
 
 Database хүснэгтүүд RLS-тай, browser-оос Data API-аар шууд хандах policy байхгүй. PostgreSQL холболттой backend эрх, нийтлэлийн төлөв, оролтыг шалгана. Сургалт/мэдээ хадгалах болон үйлдлийн түүх нэг transaction-д бичигдэнэ. Устгал soft delete тул сэргээж болно. Production-д DATABASE_URL байхгүй бол түр санах ой руу шилжихгүй.
 

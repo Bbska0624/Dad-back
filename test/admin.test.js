@@ -14,7 +14,7 @@ async function withApp(options, fn) {
 
 test('admin endpoints reject demo sessions, missing tokens and ordinary users before database access', async () => {
   await withApp({ verifyUser: async () => ({ id: 'user', email: 'user@example.com', role: 'user' }) }, async (url) => {
-    for (const path of ['/admin/courses', '/admin/news', '/admin/activity', '/admin/users', '/admin/records']) {
+    for (const path of ['/admin/courses', '/admin/news', '/admin/activity', '/admin/users', '/admin/records', '/admin/payment-notifications']) {
       assert.equal((await fetch(url + path, { headers: { Cookie: 'mc-demo-session=admin' } })).status, 401);
       assert.equal((await fetch(url + path, { headers: { Authorization: 'Bearer ordinary-user' } })).status, 403);
     }

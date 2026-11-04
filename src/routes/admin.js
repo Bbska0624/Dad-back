@@ -60,6 +60,18 @@ export function createAdminRouter(options = {}) {
     res.json({ id, action });
   });
   // Сайтын курсын захиалга: админ шилжүүлгийг шалгаад "Төлөгдсөн" дарахад хичээл үзэх эрх 3 сараар үүснэ.
+  router.get('/payment-notifications', async (_req, res) => {
+    res.set('Cache-Control', 'no-store');
+    const db = database();
+    const where = { status: 'pending_review', reportedAt: { not: null } };
+    const [rows, count] = await Promise.all([
+      db.courseOrder.findMany({ where, orderBy: { reportedAt: 'asc' }, take: 50 }),
+      db.courseOrder.count({ where }),
+    ]);
+    const profiles = await db.profile.findMany({ where: { id: { in: [...new Set(rows.map((row) => row.userId))] } }, select: { id: true, name: true, email: true } });
+    const byId = new Map(profiles.map((profile) => [profile.id, profile]));
+    res.json({ count, orders: rows.map((row) => ({ id: row.id, amount: row.amount, currency: row.currency, reportedAt: row.reportedAt, user: byId.get(row.userId) ?? null })) });
+  });
   router.get('/course-orders', async (req, res) => {
     const { toOrder } = await import('./checkout.js');
     const db = database();

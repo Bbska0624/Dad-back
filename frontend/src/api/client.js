@@ -70,6 +70,9 @@ export async function request(path, { method = 'GET', body, signal, mock, token 
 }
 
 const MESSAGES = {
+  same_password: ['Өмнөхөөсөө өөр нууц үг сонгоно уу.', 'Choose a password different from your current password.'],
+  session_not_found: ['Сэргээх холбоос хүчингүй болсон. Шинэ холбоос авна уу.', 'Your reset session has expired. Request a new reset link.'],
+  server_unavailable: ['Админ сервертэй холбогдож чадсангүй. Түр хүлээгээд дахин оролдоно уу.', 'The admin server is unavailable. Please wait and try again.'],
   unauthorized: ['Нэвтрэх эрх хүчингүй болсон байна. Дахин нэвтэрнэ үү.', 'Your session has expired. Please log in again.'],
   auth_unavailable: ['Нэвтрэлтийн үйлчилгээтэй холбогдож чадсангүй.', 'Could not reach the authentication service.'],
   invalid_credentials: ['Имэйл эсвэл нууц үг буруу байна.', 'Incorrect email or password.'],

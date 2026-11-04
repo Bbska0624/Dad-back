@@ -1,4 +1,5 @@
 import AdminServices from './AdminServices';
+import PaymentNotifications from './PaymentNotifications';
 import AdminAbout from './AdminAbout';
 import { useId, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -68,6 +69,8 @@ function EnrollmentChart({ timeline, locale, t }) {
 function AdminWorkspace() {
   const { records, logout } = useAuth();
   const { lang, t } = useLang();
+  const [paymentQuery, setPaymentQuery] = useState('');
+  const [notificationRevision, setNotificationRevision] = useState(0);
   const [days, setDays] = useState(30);
   const [activeTab, setActiveTab] = useState('overview');
   const courseApi = useApi((signal) => getAdminContent('courses', { signal }), []);
@@ -95,6 +98,7 @@ function AdminWorkspace() {
         description={t('Сургалт, элсэлт, мэдээллээ нэг дороос хянаарай.', 'Monitor courses, enrollments and content in one place.')}
         onLogout={logout}
       />
+      <PaymentNotifications revision={notificationRevision} onReview={(id) => { setPaymentQuery(id); setActiveTab('course-orders'); }} />
       <div className="admin-workspace-layout"><aside className="admin-toolbar"><p className="admin-menu-label">{t('УДИРДЛАГЫН ЦЭС', 'WORKSPACE MENU')}</p>
         <div className="admin-sections" role="tablist" aria-orientation="vertical" aria-label={t('Удирдлагын хэсгүүд', 'Dashboard sections')}>
           {ADMIN_TABS.map((tab, index) => <button key={tab.id} id={`admin-tab-${tab.id}`} type="button" role="tab" aria-selected={activeTab === tab.id} aria-controls={`admin-${tab.id}`} tabIndex={activeTab === tab.id ? 0 : -1} onClick={() => setActiveTab(tab.id)} onKeyDown={(event) => {
@@ -139,7 +143,7 @@ function AdminWorkspace() {
       </section>
       <section id="admin-about" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-about" tabIndex={0} hidden={activeTab !== 'about'}>{activeTab === 'about' && <AdminAbout />}</section>
       <section id="admin-course-orders" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-course-orders" tabIndex={0} hidden={activeTab !== 'course-orders'}>
-        {activeTab === 'course-orders' && <AdminCourseOrders />}
+        {activeTab === 'course-orders' && <AdminCourseOrders key={paymentQuery} initialQuery={paymentQuery} onChanged={() => setNotificationRevision((n) => n + 1)} />}
       </section>
       <section id="admin-enrollments" className="account-card admin-panel" role="tabpanel" aria-labelledby="admin-tab-enrollments" tabIndex={0} hidden={activeTab !== 'enrollments'}>
         <AdminRecordsManager type="course" days={days} />

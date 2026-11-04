@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
 import { errorMessage } from '../../api/client';
@@ -41,7 +41,8 @@ export default function LoginPage() {
       if (!profile) { setError('login'); return; }
       navigate(profile.role === 'admin' ? '/admin' : '/login', { replace: true });
     } catch (err) {
-      setError(err?.code || 'unknown');
+      setError(err?.name === 'AuthRetryableFetchError' ? 'auth_unavailable'
+        : err?.status >= 500 ? 'server_unavailable' : err?.code || 'unknown');
     } finally {
       setBusy(false);
     }
@@ -69,6 +70,7 @@ export default function LoginPage() {
           <button className="btn auth-submit" type="submit">{busy ? t('Түр хүлээнэ үү…', 'Please wait…') : t('Нэвтрэх →', 'Log in →')}</button>
         </fieldset>
       </form>
+      <p><Link to="/forgot-password">{t('Нууц үг мартсан?', 'Forgot password?')}</Link></p>
       <p className="auth-switch">{t('Нэвтрэх эрхийг системийн админ олгоно.', 'Access is provided by your system administrator.')}</p>
     </div>
   </main>;

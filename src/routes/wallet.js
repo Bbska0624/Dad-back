@@ -9,6 +9,7 @@ import { createQPayClient, verifyOrderSignature } from '../services/qpay.js';
 import { authMiddleware } from '../services/supabase.js';
 import { moveWallet, walletSummary } from '../services/wallet.js';
 import { newId } from '../store.js';
+import { bankAccounts } from '../services/banks.js';
 
 const TOPUP_MIN = 1_000;
 const TOPUP_MAX = 5_000_000;
@@ -102,6 +103,7 @@ export function createWalletRouter({ limit, env = process.env, qpay = createQPay
       ...await walletSummary(db, req.user.id),
       limits: { min: TOPUP_MIN, max: TOPUP_MAX },
       bank: bankDetails(env),
+      banks: bankAccounts(env),
       topups: topups.map((row) => toOrder(row, env)),
     });
   });

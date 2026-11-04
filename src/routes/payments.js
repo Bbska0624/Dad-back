@@ -3,10 +3,11 @@
 import { Router } from 'express';
 import { HttpError, notFound, validationError } from '../errors.js';
 import { findCourse, findEnrollment, findPayment, insertPayment, newId } from '../store.js';
+import { bankAccounts } from '../services/banks.js';
 
 function bankInstructions(reference, env) {
   const { BANK_NAME, BANK_ACCOUNT_NUMBER, BANK_ACCOUNT_NAME } = env;
-  if (!BANK_NAME || !BANK_ACCOUNT_NUMBER || !BANK_ACCOUNT_NAME) return null; // тохируулаагүй бол mock-той адил null
+  if (!BANK_NAME || !BANK_ACCOUNT_NUMBER || !BANK_ACCOUNT_NAME) return { ...bankAccounts(env)[0], banks: bankAccounts(env), reference };
   return { bankName: BANK_NAME, accountNumber: BANK_ACCOUNT_NUMBER, accountName: BANK_ACCOUNT_NAME, reference };
 }
 

@@ -235,6 +235,8 @@ test('DB: order → bank transfer → admin marks paid → lessons unlocked for 
     // Шилжүүлгийн мэдэгдэл эрх олгохгүй.
     const reported = await student.call('POST', `/orders/${id}/bank-transfer`);
     assert.equal(reported.body.status, 'pending_review');
+    const repeated = await student.call('POST', `/orders/${id}/bank-transfer`);
+    assert.equal(repeated.body.reportedAt, reported.body.reportedAt);
     assert.equal((await student.call('GET', '/me/courses/sql-databases/lessons')).status, 403);
     assert.equal((await student.call('GET', '/me/orders')).body[0].status, 'pending_review');
 
@@ -249,9 +251,14 @@ test('DB: order → bank transfer → admin marks paid → lessons unlocked for 
     const listed = list.body.find((o) => o.id === id);
     assert.equal(listed.user.email, email);
     assert.equal(listed.status, 'pending_review');
+    const notifications = await admin('GET', '/admin/payment-notifications');
+    assert.equal(notifications.status, 200);
+    assert.equal(notifications.body.orders.filter((order) => order.id === id).length, 1);
+    assert.equal(notifications.body.orders.find((order) => order.id === id).amount, listed.amount);
     const paid = await admin('POST', `/admin/course-orders/${id}/paid`);
     assert.equal(paid.status, 200);
     assert.equal(paid.body.status, 'paid');
+    assert.equal((await admin('GET', '/admin/payment-notifications')).body.orders.some((order) => order.id === id), false);
     assert.equal((await admin('POST', `/admin/course-orders/${id}/paid`)).body.status, 'paid'); // давтан дарахад аюулгүй
 
     const access = (await student.call('GET', '/me/courses')).body;
