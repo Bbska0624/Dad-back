@@ -1,3 +1,4 @@
+import { withCartSettings, saveCartSetting } from '../services/courseCommerce.js';
 import { Router } from 'express';
 import { readAbout, validateAbout } from '../services/about.js';
 import { Prisma } from '@prisma/client';
@@ -111,7 +112,12 @@ export function createAdminRouter(options = {}) {
     });
     res.json(toOrder(row));
   });
-  router.get('/:type', async (req, res) => res.json(await database()[modelName(req.params.type)].findMany({ orderBy: { createdAt: 'desc' } })));
+  router.get('/:type', async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    const db = database();
+    const rows = await db[modelName(req.params.type)].findMany({ orderBy: { createdAt: 'desc' } });
+    res.json(req.params.type === 'courses' ? await withCartSettings(db, rows) : rows);
+  });
   const save = async (req, res) => {
     const { type, id } = req.params;
     const model = modelName(type);
@@ -122,6 +128,7 @@ export function createAdminRouter(options = {}) {
       const data = toData(validateContent(type, { publication: 'draft', ...current, ...req.body }));
       const row = id ? await tx[model].update({ where: { id }, data: { ...data, managed: true } })
         : await tx[model].create({ data: { ...data, id: newId(model), managed: true } });
+      if (type === 'courses') await saveCartSetting(tx, row.id, req.body.cartEnabled);
       await tx.activity.create({ data: { id: newId('act'), actorId: req.user.id, action: id ? 'update' : 'create', type, title: row.title } });
       return row;
     });

@@ -26,6 +26,9 @@ before(async () => {
     const { createPrismaStore, seedContent } = await import('../src/store/prisma.js');
     store = createPrismaStore({ url });
     await seedContent(store.prisma, { courses: testCourses(), news: load('news') });
+    // Regression coverage for online checkout after admin reopens the courses.
+    const { saveCartSetting } = await import('../src/services/courseCommerce.js');
+    for (const course of testCourses()) await saveCartSetting(store.prisma, course.id, true);
   } else store = createMemoryStore();
   useStore(store);
 });
@@ -51,7 +54,7 @@ function fakeQPay() {
 }
 
 async function withApi(options, fn) {
-  const server = createApp({ verifyUser, formLimit: { windowMs: 60_000, max: 10_000 }, env, ...options }).listen(0, '127.0.0.1');
+  const server = createApp({ verifyUser, formLimit: { windowMs: 60_000, max: 10_000 }, ...options, env: { ...env, ...options.env, PHONE_ONLY_ORDERING: 'false' } }).listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   const base = `http://127.0.0.1:${server.address().port}/api`;
   const api = async (token, method, path, body) => {

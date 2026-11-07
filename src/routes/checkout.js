@@ -1,5 +1,7 @@
 // Сайтын сагс, захиалга, хичээл үзэх эрх (frontend docs/COURSE-CHECKOUT.md).
 // Хэрэглэгчийг зөвхөн session-оос тодорхойлно, клиентээс ирсэн userId-д итгэхгүй.
+import { phoneOnlyOrdering } from '../services/ordering.js';
+import { withCartSettings } from '../services/courseCommerce.js';
 import { Router } from 'express';
 import { Prisma } from '@prisma/client';
 import { database } from './admin.js';
@@ -20,8 +22,8 @@ export function toOrder(row, env = process.env) {
     createdAt: row.createdAt.toISOString(),
     ...(row.reportedAt ? { reportedAt: row.reportedAt.toISOString() } : {}),
     ...(row.paidAt ? { paidAt: row.paidAt.toISOString() } : {}),
-    qpayAvailable: qpayConfigured(env) && row.status === 'pending_payment',
-    banks: bankAccounts(env),
+    qpayAvailable: !phoneOnlyOrdering(env) && qpayConfigured(env) && row.status === 'pending_payment',
+    banks: phoneOnlyOrdering(env) ? [] : bankAccounts(env),
   };
 }
 
@@ -31,6 +33,8 @@ const sameCourses = (a, b) => a.length === b.length && [...a].sort().join('|') =
 
 async function priceItems(db, ids) {
   const rows = await db.course.findMany({ where: { id: { in: ids }, ...visibleContent } });
+  const enabled = await withCartSettings(db, rows);
+  if (enabled.some((course) => !course.cartEnabled)) throw new HttpError(409, 'enrollment_closed', 'Course ordering is paused');
   const byId = new Map(rows.map((row) => [row.id, row]));
   const missing = ids.filter((id) => !byId.has(id));
   if (missing.length) throw validationError({ courseIds: `Unknown course: ${missing.join(', ')}` });

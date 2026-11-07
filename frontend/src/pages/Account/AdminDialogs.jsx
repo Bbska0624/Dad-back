@@ -33,6 +33,7 @@ export function ContentEditor({ type, item, number, onClose, onSaved }) {
   const [form, setForm] = useState(() => ({
     title: pair(item?.title), description: pair(item?.description), category: course ? item?.category || 'Code' : pair(item?.category),
     summary: pair(item?.summary), body: pair(item?.body), status: item?.status || 'planned', publication: item?.publication || 'draft',
+    cartEnabled: item?.cartEnabled ?? (item?.title?.mn?.trim().replace(/\s+/g, ' ').toLocaleLowerCase('mn') === 'компьютер зохион байгуулалт, архитектур'),
     price: item?.price ?? '', featured: item?.featured ?? false, duration: pair(item?.duration), level: pair(item?.level),
     publishedAt: item?.publishedAt?.slice(0, 10) || '', imageSrc: (course ? item?.image?.src : item?.coverImage?.src) || '',
     imageAlt: pair(course ? item?.image?.alt : item?.coverImage?.alt), gallery: (item?.gallery || []).map((image) => image.src).join('\n'),
@@ -68,7 +69,7 @@ export function ContentEditor({ type, item, number, onClose, onSaved }) {
       if (imageSrc.startsWith('data:')) imageSrc = (await uploadAdminImage(imageSrc)).src;
       const image = imageSrc ? { ...(oldImage?.src === imageSrc ? oldImage : { width: 1600, height: 900 }), src: imageSrc, alt: { mn: form.imageAlt.mn.trim() || form.title.mn.trim(), en: form.imageAlt.en.trim() || form.title.en.trim() || form.title.mn.trim() } } : null;
       const common = { title: both('title'), publication: form.publication };
-      const data = course ? { ...common, description: both('description'), category: form.category, status: form.status, price: form.price === '' ? null : Number(form.price), image, featured: form.featured, duration: both('duration'), level: both('level') } : {
+      const data = course ? { ...common, description: both('description'), category: form.category, status: form.status, cartEnabled: form.cartEnabled, price: form.price === '' ? null : Number(form.price), image, featured: form.featured, duration: both('duration'), level: both('level') } : {
         ...common, category: both('category'), summary: both('summary'), body: both('body'), publishedAt: form.publishedAt ? `${form.publishedAt}T00:00:00.000Z` : null, isSample: false, number: item?.number || String(number).padStart(2, '0'), coverImage: image,
         details: { ...item?.details, date: form.publishedAt ? { mn: form.publishedAt.replaceAll('-', '.'), en: form.publishedAt } : null, location: both('location'), partners: both('partners') },
         gallery: form.gallery.split('\n').map((url) => url.trim()).filter(Boolean).map((src) => item?.gallery?.find((image) => image.src === src) || { src, width: 1600, height: 900, alt: both('title') }),
@@ -88,6 +89,8 @@ export function ContentEditor({ type, item, number, onClose, onSaved }) {
           <label>{t('Элсэлтийн төлөв', 'Enrollment status')}<select value={form.status} onChange={(event) => set('status', event.target.value)}><option value="open">{t('Бүртгэл нээлттэй', 'Enrollment open')}</option><option value="waitlist">{t('Хүлээлгийн жагсаалт', 'Waitlist')}</option><option value="planned">{t('Төлөвлөсөн', 'Planned')}</option></select></label>
           <label>{t('Үнэ (₮)', 'Price (MNT)')}<input type="number" min="0" step="1" value={form.price} placeholder={t('Тогтоогоогүй', 'Not set')} onChange={(event) => set('price', event.target.value)} /></label>
         </div>
+        <label className="admin-checkbox"><input type="checkbox" checked={form.cartEnabled} onChange={(event) => set('cartEnabled', event.target.checked)} />{t('Сагслах боломж нээлттэй', 'Allow adding to cart')}</label>
+        <p>{t('Унтраавал шинэ хэрэглэгч сагслах боломжгүй. Өмнө авсан сургалтын эрх хэвээр үлдэнэ.', 'When disabled, new customers cannot add this course to cart. Existing learning access is preserved.')}</p>
         {field('duration', t('Үргэлжлэх хугацаа', 'Duration'))}{field('level', t('Түвшин', 'Level'))}
         <label className="admin-checkbox"><input type="checkbox" checked={form.featured} onChange={(event) => set('featured', event.target.checked)} />{t('Нүүр хуудсанд онцлох', 'Feature on the home page')}</label>
       </> : <>

@@ -1,5 +1,6 @@
 // Хэтэвч ба QPay: /orders/:id/{wallet,qpay,qpay/check}, /me/wallet, /me/wallet/topups, /qpay/callback.
 // Эрх нээх, цэнэглэлтийг орлого болгох нь зөвхөн settleOrder-оор хийгдэнэ.
+import { phoneOnlyOrdering } from '../services/ordering.js';
 import { Router } from 'express';
 import { database } from './admin.js';
 import { toOrder } from './checkout.js';
@@ -102,8 +103,8 @@ export function createWalletRouter({ limit, env = process.env, qpay = createQPay
     res.json({
       ...await walletSummary(db, req.user.id),
       limits: { min: TOPUP_MIN, max: TOPUP_MAX },
-      bank: bankDetails(env),
-      banks: bankAccounts(env),
+      bank: phoneOnlyOrdering(env) ? null : bankDetails(env),
+      banks: phoneOnlyOrdering(env) ? [] : bankAccounts(env),
       topups: topups.map((row) => toOrder(row, env)),
     });
   });

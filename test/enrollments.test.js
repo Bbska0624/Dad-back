@@ -28,7 +28,7 @@ after(() => store.close());
 const BANK_ENV = { BANK_NAME: 'Хаан банк', BANK_ACCOUNT_NUMBER: '5000123456', BANK_ACCOUNT_NAME: 'Magic Code AI' };
 
 async function withServer(options, fn) {
-  const server = createApp(options).listen(0);
+  const server = createApp({ ...options, env: { ...options.env, PHONE_ONLY_ORDERING: 'false' } }).listen(0);
   await new Promise((resolve) => server.once('listening', resolve));
   try {
     await fn(`http://127.0.0.1:${server.address().port}/api`);

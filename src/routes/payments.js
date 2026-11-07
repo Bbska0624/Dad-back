@@ -1,5 +1,6 @@
 // POST /api/payments, GET /api/payments/:id — docs/API.md §3.
 // Одоогоор: банкны шилжүүлэг → дансны мэдээлэл (.env-ээс). QPay → instructions: null (7-р алхамд холбоно).
+import { phoneOnlyOrdering } from '../services/ordering.js';
 import { Router } from 'express';
 import { HttpError, notFound, validationError } from '../errors.js';
 import { findCourse, findEnrollment, findPayment, insertPayment, newId } from '../store.js';
@@ -48,7 +49,7 @@ export function createPaymentsRouter({ limit, env = process.env }) {
   router.get('/:id', async (req, res) => {
     const payment = await findPayment(req.params.id);
     if (!payment) throw notFound('Payment');
-    res.json(publicPayment(payment));
+    res.json(publicPayment(phoneOnlyOrdering(env) ? { ...payment, instructions: null } : payment));
   });
 
   return router;

@@ -1,3 +1,4 @@
+import { phoneOrderingGuard } from './services/ordering.js';
 import express from 'express';
 import { readAbout } from './services/about.js';
 import { getStore } from './store.js';
@@ -51,6 +52,7 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
     await initStore(env);
     next();
   });
+  api.use(phoneOrderingGuard(env));
   api.use('/services', servicesRouter);
   api.get('/site/about', async (_req, res) => {
     const content = await readAbout(getStore().prisma);
