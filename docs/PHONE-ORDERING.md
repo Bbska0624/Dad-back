@@ -1,10 +1,11 @@
-# Temporary phone ordering
+# Course payment and contact options
 
-- Only the course titled `Компьютер зохион байгуулалт, архитектур` allows adding to cart by default. All other courses default to paused.
-- Admin → Courses → Edit → **Сагслах боломж нээлттэй** → Save overrides the default for that course. This does not revoke existing learning access or change publication/enrollment status.
-- Overrides are stored by course ID in the existing `site_sections` table (`course-commerce:<id>`). No schema migration or destructive data update is required.
-- Public course responses include `cartEnabled`; the frontend refreshes the catalog on window focus or page reload.
-- Phone-only ordering blocks new online orders, enrollments, top-ups and payment initiation. Existing order history, lesson access, admin settlement and QPay reconciliation remain available. Bank details are omitted from order, wallet and legacy payment responses.
-- Deploy both the backend/admin repository and the website repository. Local edits do not change the Vercel sites until deployed.
-- To restore online checkout later, set backend `PHONE_ONLY_ORDERING=false`, change frontend `PHONE_ONLY_ORDERING` in `src/data/ordering.js` to `false`, and deploy both. Course cart switches still apply.
-- The order phone number is configured in frontend `src/data/ordering.js` as `ORDER_PHONE`.
+All published courses can be added to the cart. Existing learning access is unchanged.
+
+- Computer organization and architecture (Компьютер зохион байгуулалт, архитектур) and Python (python-programming) use normal checkout by default: bank details, transfer review requests and admin payment confirmation.
+- The other eight courses show a call button for 94140478 in the cart. They are excluded from the checkout amount and order items, including in mixed carts.
+- Admin → Courses → Edit → Онлайнаар төлбөр төлөх боломжтой controls online payment eligibility, not the ability to add to cart.
+- Settings use onlinePaymentEnabled in existing site_sections records keyed course-commerce:<id>. Old cartEnabled overrides are ignored. No database migration is required.
+- Public course responses expose cartEnabled: true and onlinePaymentEnabled. New checkout requests containing contact-only courses are rejected server-side.
+- Global phone-only mode is off by default. Existing order history and payment processing remain intact. PHONE_ONLY_ORDERING=true is an optional emergency override; it is not required for this configuration.
+- Deploy both repositories together so the restored frontend checkout reaches the updated backend.

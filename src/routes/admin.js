@@ -128,7 +128,7 @@ export function createAdminRouter(options = {}) {
       const data = toData(validateContent(type, { publication: 'draft', ...current, ...req.body }));
       const row = id ? await tx[model].update({ where: { id }, data: { ...data, managed: true } })
         : await tx[model].create({ data: { ...data, id: newId(model), managed: true } });
-      if (type === 'courses') await saveCartSetting(tx, row.id, req.body.cartEnabled);
+      if (type === 'courses') await saveCartSetting(tx, row.id, req.body.onlinePaymentEnabled);
       await tx.activity.create({ data: { id: newId('act'), actorId: req.user.id, action: id ? 'update' : 'create', type, title: row.title } });
       return row;
     });

@@ -1,6 +1,6 @@
 import { HttpError } from '../errors.js';
 
-export const phoneOnlyOrdering = (env = process.env) => env.PHONE_ONLY_ORDERING !== 'false';
+export const phoneOnlyOrdering = (env = process.env) => env.PHONE_ONLY_ORDERING === 'true';
 
 // Leave existing order history, admin confirmation and QPay reconciliation intact.
 export function phoneOrderingGuard(env) {

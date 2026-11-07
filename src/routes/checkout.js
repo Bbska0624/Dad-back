@@ -31,10 +31,10 @@ const quoted = (items) => items.every((item) => Number.isInteger(item.price) && 
 const total = (items) => items.reduce((sum, item) => sum + item.price, 0);
 const sameCourses = (a, b) => a.length === b.length && [...a].sort().join('|') === [...b].sort().join('|');
 
-async function priceItems(db, ids) {
+export async function priceItems(db, ids) {
   const rows = await db.course.findMany({ where: { id: { in: ids }, ...visibleContent } });
   const enabled = await withCartSettings(db, rows);
-  if (enabled.some((course) => !course.cartEnabled)) throw new HttpError(409, 'enrollment_closed', 'Course ordering is paused');
+  if (enabled.some((course) => !course.onlinePaymentEnabled)) throw new HttpError(409, 'phone_ordering_only', 'Please call 94140478 to access this course');
   const byId = new Map(rows.map((row) => [row.id, row]));
   const missing = ids.filter((id) => !byId.has(id));
   if (missing.length) throw validationError({ courseIds: `Unknown course: ${missing.join(', ')}` });

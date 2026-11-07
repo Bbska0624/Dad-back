@@ -8,7 +8,7 @@ export function validateContent(type, input) {
   const fields = {};
   if (!localized(input.title, 250)) fields.title = 'Both languages required, max 250';
   if (!['published', 'draft', 'archived'].includes(input.publication)) fields.publication = 'Invalid publication';
-  if (type === 'courses' && input.cartEnabled !== undefined && typeof input.cartEnabled !== 'boolean') fields.cartEnabled = 'Boolean required';
+  if (type === 'courses' && input.onlinePaymentEnabled !== undefined && typeof input.onlinePaymentEnabled !== 'boolean') fields.onlinePaymentEnabled = 'Boolean required';
   if (type === 'services') {
     if (!localized(input.text)) fields.text = 'Both languages required';
     if (!text(input.price, 150)) fields.price = 'Price range required, max 150';

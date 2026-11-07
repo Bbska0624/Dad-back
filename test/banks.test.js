@@ -12,7 +12,7 @@ test('checkout provides both receiving accounts and the order reference', () => 
 });
 
 test('phone ordering hides accounts and disables new QPay invoices', () => {
- const order = toOrder({ id: 'existing-order', createdAt: new Date(), status: 'pending_payment' }, {});
+ const order = toOrder({ id: 'existing-order', createdAt: new Date(), status: 'pending_payment' }, { PHONE_ONLY_ORDERING: 'true' });
  assert.deepEqual(order.banks, []);
  assert.equal(order.qpayAvailable, false);
  assert.equal(order.id, 'existing-order');
