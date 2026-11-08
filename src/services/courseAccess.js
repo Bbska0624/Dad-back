@@ -2,13 +2,15 @@
 import { readFileSync } from 'node:fs';
 import { newId } from '../store.js';
 import { moveWallet } from './wallet.js';
+import { videoLessons } from './videos.js';
 
 export const COURSE_ACCESS_MONTHS = 3;
 export const PENDING_STATUSES = ['awaiting_quote', 'pending_payment', 'pending_review'];
 export const PAYABLE_STATUSES = ['pending_payment', 'pending_review'];
 
 const lessons = JSON.parse(readFileSync(new URL('../data/lessons.json', import.meta.url), 'utf8'));
-export const courseLessons = (courseId) => (Object.hasOwn(lessons, courseId) ? structuredClone(lessons[courseId]) : null);
+// YouTube хичээлүүд (lessons.json) эсвэл R2 дээрх өөрсдийн видео хичээлүүд (videos.json).
+export const courseLessons = (courseId) => (Object.hasOwn(lessons, courseId) ? structuredClone(lessons[courseId]) : videoLessons(courseId));
 
 // Хуанлийн 3 сар, сарын сүүлээр хязгаарлана (1-р сарын 31 + 3 сар = 4-р сарын 30).
 export function accessExpiresAt(activatedAt) {

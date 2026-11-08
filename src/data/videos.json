@@ -1,0 +1,19 @@
+{
+  "course_86a45b6609a5": {
+    "preview": "lesson-01",
+    "lessons": [
+      { "id": "lesson-01", "mn": "Лаб 1", "en": "Lab 1", "duration": 522 },
+      { "id": "lesson-02", "mn": "Лаб 2", "en": "Lab 2", "duration": 772 },
+      { "id": "lesson-03", "mn": "Лаб 3", "en": "Lab 3", "duration": 368 },
+      { "id": "lesson-04", "mn": "Лаб 4", "en": "Lab 4", "duration": 416 },
+      { "id": "lesson-05", "mn": "Лаб 5", "en": "Lab 5", "duration": 427 },
+      { "id": "lesson-06", "mn": "Лаб 6", "en": "Lab 6", "duration": 338 },
+      { "id": "lesson-07", "mn": "Лаб 7", "en": "Lab 7", "duration": 221 },
+      { "id": "lesson-09", "mn": "Лаб 9", "en": "Lab 9", "duration": 316 },
+      { "id": "lesson-10", "mn": "Лаб 10", "en": "Lab 10", "duration": 649 },
+      { "id": "lesson-11", "mn": "Лаб 11", "en": "Lab 11", "duration": 779 },
+      { "id": "lesson-12", "mn": "Лаб 12", "en": "Lab 12", "duration": 60 },
+      { "id": "lesson-13", "mn": "Лаб 13", "en": "Lab 13", "duration": 670 }
+    ]
+  }
+}

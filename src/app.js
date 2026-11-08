@@ -18,6 +18,7 @@ import { createAccountRouter } from './routes/account.js';
 import { createAuthRouter } from './routes/auth.js';
 import { createCheckoutRouter } from './routes/checkout.js';
 import { createWalletRouter } from './routes/wallet.js';
+import { createVideosRouter } from './routes/videos.js';
 import { originMatcher } from './origins.js';
 
 function buildOriginCheck(env) {
@@ -61,6 +62,8 @@ export function createApp({ generateReply = geminiReply, chatLimit, formLimit, e
   api.use('/courses', coursesRouter);
   api.use('/news', newsRouter);
   const session = { env, verifyUser, auth };
+  // Хичээлийн видео: /courses/:id/preview (нээлттэй), /me/courses/:courseId/lessons/:lessonId/video
+  api.use(createVideosRouter({ ...session, limit: rateLimit({ windowMs: 60_000, max: 30 }) }));
   api.use('/auth', createAuthRouter({ ...session, limit: rateLimit(authLimit ?? { windowMs: 60_000, max: 10 }) }));
   api.use('/admin', createAdminRouter(session));
   api.use('/account', createAccountRouter(session));
